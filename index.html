@@ -3,334 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>儿童发展心理学 | 交互式信息图</title>
+    <title>学前儿童发展心理学应用工作坊 - 可视化信息</title>
+    <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Brilliant Blues -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear dashboard structure. The content from the four presentation chapters is regrouped into four user-centric themes: 1) The Developing Brain & Body, 2) How Children Think & Learn, 3) Nature vs. Nurture, Revisited, and 4) The Surprising World of the Infant. This structure facilitates exploration by grouping related concepts (e.g., all brain mechanisms together) rather than following the report's linear order. User flow is guided by a sticky navigation bar and interactive elements like clickable steppers and diagrams to encourage discovery. This design was chosen for superior usability and to make complex psychological concepts more digestible and engaging. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Executive Functions (EF). Goal: Compare/Inform. Viz: Radar Chart (Chart.js/Canvas). Interaction: Tooltips on hover provide details. Justification: A radar chart is ideal for showing the interconnectedness and relative importance of the three core EF components.
-        - Report Info: Gene-Environment Correlation (rGE). Goal: Organize. Viz: Interactive Stepper (HTML/CSS/JS). Interaction: Users click steps (Passive, Evocative, Active) to reveal detailed explanations. Justification: Breaks down a complex, multi-stage concept into manageable, interactive steps.
-        - Report Info: Brain Development Timeline. Goal: Change. Viz: Timeline Diagram (HTML/CSS/Tailwind). Interaction: Subtle hover effects. Justification: Visually represents the sequence of key brain development events over time.
-        - Report Info: Brain Plasticity. Goal: Compare. Viz: Two-column layout with icons (Unicode). Interaction: Static comparison. Justification: A clear side-by-side view is the most effective way to contrast the two plasticity types.
-        - All diagrams (e.g., flowcharts) are built with structured HTML and Tailwind, adhering to the NO SVG/Mermaid constraint.
-     -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        html {
-            scroll-behavior: smooth;
+        /* Custom Styles for Inter Font and enhanced visuals */
+        body { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        .concept-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .concept-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .visual-placeholder {
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); /* Light Blue Background */
+            border: 1px solid #bae6fd; /* Light Blue Border */
+            height: 180px;
         }
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #F0F4F8; /* Light gray-blue from a similar palette */
-        }
-        .nav-link.active {
-            color: #F39C12;
-            border-bottom-color: #F39C12;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px; 
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-        .stepper-item.active div:first-child {
-            background-color: #0074B7;
-            color: white;
-        }
-        .stepper-item.active p {
-            font-weight: 600;
-            color: #0074B7;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section-header { border-left: 6px solid #1d4ed8; padding-left: 1rem; }
+        .svg-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-gray-50 p-6 sm:p-10">
 
-    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center">
-                    <h1 class="text-2xl md:text-3xl font-bold text-[#003B73]">儿童发展心理学</h1>
-                </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#brain" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">大脑与身体</a>
-                    <a href="#learning" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">思维与学习</a>
-                    <a href="#nature-nurture" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">遗传与环境</a>
-                    <a href="#infant" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">婴儿的世界</a>
-                </nav>
-            </div>
-        </div>
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-800">走进“小大人”的内心世界</h1>
+        <p class="text-xl text-indigo-600 mt-2">学前儿童发展心理学应用工作坊 - 核心知识点可视化</p>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold text-[#003B73] sm:text-5xl md:text-6xl">经典理论与前沿洞察</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">一份关于儿童发展的交互式指南，整合了从表观遗传学到执行功能的最新研究。</p>
+    <!-- ======================================================= -->
+    <!--                  第1次课：认识“心理学”与“学前心理学”                   -->
+    <!-- ======================================================= -->
+    <div class="max-w-4xl mx-auto mb-16">
+        <h2 class="section-header text-3xl font-bold text-gray-700 mb-8">第1次课：心理学的科学探秘</h2>
+
+        <!-- 知识点1：心理学的范畴与实质 - 冰山模型 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- 心理冰山模型：意识、前意识、潜意识 -->
+                        <svg class="w-2/3 h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="iceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#93c5fd;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- 水面线 -->
+                            <line x1="10" y1="30" x2="90" y2="30" stroke="#3b82f6" stroke-width="2" />
+                            <!-- 冰山主体 (一个倒置的三角形) -->
+                            <polygon points="50,10 90,90 10,90" fill="url(#iceGradient)" stroke="#1d4ed8" stroke-width="2" />
+                            <!-- 意识 (Conscious) - 顶端小三角 -->
+                            <text x="50" y="25" font-size="8" fill="#1d4ed8" text-anchor="middle" font-weight="bold">意识 (5%)</text>
+                            <!-- 前意识 (Preconscious) - 中间部分 -->
+                            <text x="50" y="45" font-size="6" fill="#1d4ed8" text-anchor="middle">前意识</text>
+                            <!-- 潜意识 (Unconscious) - 底部最大部分 -->
+                            <text x="50" y="75" font-size="6" fill="#1d4ed8" text-anchor="middle">潜意识 (90%)</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点1】心理学的结构与实质</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>**结构：** 心理过程（<span class="font-bold text-red-500">认知、情感、意志</span>） + 个性心理（<span class="font-bold text-red-500">倾向性、特征</span>）。</li>
+                    <li>**实质：** 心理是<span class="font-bold text-red-500">脑的机能</span>，是对客观现实的<span class="font-bold text-red-500">主观反映</span>。</li>
+                    <li>**应用价值：** 心理学不靠“一眼看穿”，而是靠<span class="font-bold text-indigo-600">科学的规律</span>来预测和理解行为。</li>
+                </ul>
+            </div>
         </div>
 
-        <section id="brain" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">大脑与身体的发展</h3>
-            <div class="bg-white rounded-2xl shadow-lg p-8 grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-4">大脑发展的两大核心机制</h4>
-                    <p class="mb-6">儿童大脑的发育并非简单的线性增长，而是经历着精密的“建造与雕琢”过程。理解突触修剪和脑的可塑性，是理解早期教育重要性的关键。</p>
-                    <div class="space-y-6">
-                        <div class="p-4 bg-[#BFD7ED]/30 rounded-lg">
-                            <h5 class="font-bold text-lg text-[#003B73]">突触发生与修剪 (0-2岁+)</h5>
-                            <p class="text-gray-600">大脑在早期会产生海量连接（发生），然后根据“用进废退”原则，剪除不常用的连接（修剪），使神经网络更高效。</p>
-                        </div>
-                        <div class="p-4 bg-[#BFD7ED]/30 rounded-lg">
-                            <h5 class="font-bold text-lg text-[#003B73]">脑的可塑性</h5>
-                            <p class="text-gray-600"><strong>经验期待型:</strong> 依赖于物种普遍预期的环境刺激（如语言、光线），发生在关键期。 <br><strong>经验依赖型:</strong> 依赖于个体独特经验（如学钢琴），是终身学习的基础。</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 md:mt-0">
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-4 text-center">动作是认知的催化剂</h4>
-                     <div class="relative p-6 border-l-2 border-[#60A3D9] space-y-8">
-                        <div class="relative">
-                            <div class="absolute -left-[11px] top-1/2 -translate-y-1/2 w-5 h-5 bg-[#0074B7] rounded-full"></div>
-                            <p class="ml-8"><strong class="text-[#003B73]">学会爬行</strong> <span class="text-2xl mx-2">→</span> 增强空间记忆能力</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -left-[11px] top-1/2 -translate-y-1/2 w-5 h-5 bg-[#0074B7] rounded-full"></div>
-                            <p class="ml-8"><strong class="text-[#003B73]">学会行走</strong> <span class="text-2xl mx-2">→</span> 增加社会参照行为</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="learning" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">思维与学习的机制</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">儿童如何思考？现代心理学认为，大脑的“执行功能”是关键。它如同电脑的操作系统，调控着我们的注意力、记忆和灵活性。</p>
-            <div class="bg-white rounded-2xl shadow-lg p-8 grid lg:grid-cols-2 gap-12 items-center">
-                <div class="flex flex-col justify-center">
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-2">大脑的“总经理”：执行功能 (EF)</h4>
-                    <p class="text-gray-600 mb-4">EF是预测长期成功的关键因素，其三大核心成分协同工作，构成了高阶认知控制的基础。</p>
-                     <div class="space-y-3 text-left">
-                        <p><strong>1. 抑制控制:</strong> 抵抗干扰，控制冲动。</p>
-                        <p><strong>2. 工作记忆:</strong> 心算、听指令记步骤。</p>
-                        <p><strong>3. 认知灵活性:</strong> 快速切换思维和视角。</p>
-                    </div>
-                     <div class="mt-6 p-4 bg-[#BFD7ED]/30 rounded-lg">
-                        <h5 class="font-bold text-lg text-[#003B73]">有效干预策略</h5>
-                        <p class="text-gray-600">研究表明，整体性活动如**复杂运动（武术、舞蹈）、音乐教育、正念训练**能更有效地提升EF。</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="chart-container">
-                        <canvas id="efChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- 知识点2：学前心理学的研究内容与意义 - 时间轴与放大镜 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- 0-6岁发展时间轴与关键期放大镜 -->
+                        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 时间轴 -->
+                            <line x1="5" y1="50" x2="95" y2="50" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/>
+                            <text x="5" y="60" font-size="6" fill="#9ca3af">出生</text>
+                            <text x="95" y="60" font-size="6" fill="#9ca3af" text-anchor="end">成年</text>
 
-        <section id="nature-nurture" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">遗传与环境的动态协同</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">“先天还是后天？”这个古老的问题有了新的答案。现代科学揭示了基因与环境之间复杂的、双向的动态舞蹈。</p>
-            <div class="bg-white rounded-2xl shadow-lg p-8">
-                <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div data-step="passive" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent active">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">1</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">被动型</p>
-                    </div>
-                     <div data-step="evocative" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">2</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">唤起型</p>
-                    </div>
-                     <div data-step="active" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">3</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">主动型</p>
-                    </div>
-                </div>
-                <div id="rge-content" class="p-6 bg-[#BFD7ED]/30 rounded-lg min-h-[120px] flex items-center justify-center">
-                </div>
-                <div class="mt-8 pt-8 border-t border-gray-200">
-                    <h4 class="text-2xl font-semibold text-center text-[#0074B7] mb-4">表观遗传学：环境作为“基因开关”</h4>
-                    <p class="text-center max-w-2xl mx-auto">环境压力、营养、甚至父母的关爱行为（如舔舐）可以通过**甲基化**等机制，开启或关闭某些基因的表达，但不改变DNA序列。童年创伤可能永久性“打开”应激基因，导致高焦虑水平。</p>
-                </div>
-            </div>
-        </section>
+                            <!-- 0-6岁段 (突出显示) -->
+                            <line x1="5" y1="50" x2="35" y2="50" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                            <text x="20" y="45" font-size="7" fill="#10b981" font-weight="bold">0-6岁（学前）</text>
 
-        <section id="infant" class="scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">婴儿的惊人世界</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">与传统观念不同，现代研究发现婴儿并非“白板一块”。他们生来就具备了令人惊讶的认知和知觉能力，是积极主动的学习者。</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                    <p class="text-5xl mb-3">👶</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">人脸识别</h4>
-                    <p class="mt-2 text-gray-600">新生儿天生就对人脸图像有偏好，这是社会性发展的生物学基础。</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                    <p class="text-5xl mb-3">🎲</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">核心知识系统</h4>
-                    <p class="mt-2 text-gray-600">婴儿似乎天生拥有对物理、数字和生物运动的基本直觉，能对违反物理规律的事件感到惊讶。</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center md:col-span-2 lg:col-span-1">
-                     <p class="text-5xl mb-3">🔊👁️</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">跨通道知觉</h4>
-                    <p class="mt-2 text-gray-600">新生儿就能整合来自不同感官（如视觉和听觉）的信息，例如将声音与嘴型匹配起来。</p>
+                            <!-- 放大镜 (聚焦) -->
+                            <circle cx="35" cy="40" r="15" fill="none" stroke="#f59e0b" stroke-width="2" />
+                            <line x1="45" y1="50" x2="60" y2="65" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+                            <text x="35" y="45" font-size="8" fill="#f59e0b" text-anchor="middle" font-weight="bold">🔍</text>
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
-    
-    <footer class="mt-20 bg-white border-t">
-        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500">
-            <p>&copy; 2025 儿童发展心理学课程资料. All rights reserved.</p>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点2】学前心理学的研究与意义</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>**研究对象：** 0-6岁儿童心理发生发展的<span class="font-bold text-red-500">特点与规律</span>。</li>
+                    <li>**重点内容：** 感知觉、言语、思维、情绪、社会性等各个维度的发展。</li>
+                    <li>**实践意义：** 为<span class="font-bold text-indigo-600">幼儿教育、玩具设计、儿童保健</span>等提供科学依据，避免“揠苗助长”。</li>
+                </ul>
+                <p class="text-sm italic mt-2 text-gray-500">案例提示：小赵老师对“分离焦虑”的理论理解与实践困惑，强调知行合一。</p>
+            </div>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
+    <!-- ======================================================= -->
+    <!--             第2次课：探索“孩子为什么是这样”：发展理论（上）           -->
+    <!-- ======================================================= -->
+    <div class="max-w-4xl mx-auto mb-16">
+        <h2 class="section-header text-3xl font-bold text-gray-700 mb-8">第2次课：理论流派（上）：成熟与本能</h2>
 
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.4
-            };
+        <!-- 知识点1：成熟势力说 (格塞尔) - 种子与土壤模型 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- 种子与土壤模型：成熟决定模式 -->
+                        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 土壤 (环境) -->
+                            <rect x="0" y="70" width="100" height="30" fill="#a8713a" />
+                            <!-- 种子 (成熟) - 强调内部力量 -->
+                            <circle cx="50" cy="65" r="8" fill="#4ade80" />
+                            <text x="50" y="67" font-size="6" fill="#1e40af" text-anchor="middle" font-weight="bold">成熟</text>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === `#${id}`) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
+                            <!-- 向上生长的芽 (预定模式) -->
+                            <path d="M50 65 C45 40, 55 40, 50 15" stroke="#10b981" stroke-width="3" fill="none" />
+                            <circle cx="50" cy="15" r="5" fill="#10b981" />
 
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-            
-            const efChartCtx = document.getElementById('efChart').getContext('2d');
-            new Chart(efChartCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['抑制控制', ['工作记忆', '(Working Memory)'], '认知灵活性'],
-                    datasets: [{
-                        label: '核心执行功能',
-                        data: [90, 85, 80],
-                        backgroundColor: 'rgba(0, 116, 183, 0.2)',
-                        borderColor: '#0074B7',
-                        pointBackgroundColor: '#0074B7',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#0074B7'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: {
-                                color: '#BFD7ED'
-                            },
-                            grid: {
-                                color: '#BFD7ED'
-                            },
-                            pointLabels: {
-                                font: {
-                                    size: 14,
-                                    family: "'Noto Sans SC', sans-serif"
-                                },
-                                color: '#003B73'
-                            },
-                            ticks: {
-                                backdropColor: '#F0F4F8',
-                                color: '#0074B7',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                           display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    const item = tooltipItems[0];
-                                    let label = item.chart.data.labels[item.dataIndex];
-                                    if (Array.isArray(label)) {
-                                      return label.join(' ');
-                                    } else {
-                                      return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const rgeData = {
-                passive: {
-                    title: '被动型：父母提供环境',
-                    description: '在儿童早期，父母根据自己的遗传倾向为孩子提供成长环境。例如，热爱阅读的父母家里藏书丰富，孩子自然也处在书香环境中。'
-                },
-                evocative: {
-                    title: '唤起型：孩子唤起反应',
-                    description: '孩子天生的气质会“唤起”他人的特定反应。一个爱笑、外向的孩子会得到更多积极的社交互动，这反过来又强化了他的社交倾向。'
-                },
-                active: {
-                    title: '主动型：孩子主动选择',
-                    description: '随着年龄增长，儿童和青少年会主动寻找与自己遗传倾向相匹配的环境，即“ niches picking”（选择小环境）。例如，有运动天赋的孩子会主动加入校队。'
-                }
-            };
-            
-            const stepperItems = document.querySelectorAll('.stepper-item');
-            const rgeContentEl = document.getElementById('rge-content');
-
-            function updateRgeContent(step) {
-                const data = rgeData[step];
-                rgeContentEl.innerHTML = `
-                    <div class="fade-in">
-                        <h5 class="font-bold text-xl text-center text-[#003B73] mb-2">${data.title}</h5>
-                        <p class="text-center text-gray-700">${data.description}</p>
+                            <!-- 阳光 (环境 - 提供时机) -->
+                            <circle cx="85" cy="15" r="10" fill="#facc15" />
+                            <text x="85" y="20" font-size="6" fill="#92400e" text-anchor="middle">环境</text>
+                            <line x1="85" y1="25" x2="85" y2="70" stroke="#facc15" stroke-width="1" stroke-dasharray="2" />
+                        </svg>
                     </div>
-                `;
-            }
+                </div>
+            </div>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点1】成熟势力说（格塞尔）</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>**核心观点：** 发展由**基因**决定的<span class="font-bold text-red-500">生物成熟过程</span>主导。</li>
+                    <li>**环境作用：** 学习和环境只能为成熟提供<span class="font-bold text-red-500">适宜的时机</span>，不能超越成熟。</li>
+                    <li>**经典佐证：** 双生子<span class="font-bold text-indigo-600">爬梯实验</span>，证明提前训练效果微弱。</li>
+                </ul>
+                <p class="text-sm italic mt-2 text-gray-500">教育警示：过度“小学化”是典型的“揠苗助长”，会打破孩子自然的发展节奏。</p>
+            </div>
+        </div>
 
-            stepperItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    stepperItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    const step = item.dataset.step;
-                    updateRgeContent(step);
-                });
-            });
+        <!-- 知识点2：精神分析学派 (弗洛伊德) - 人格结构冰山图 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- 人格结构冰山图：本我、自我、超我 -->
+                        <svg class="w-2/3 h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 冰山主体 (三角形) -->
+                            <polygon points="50,10 90,90 10,90" fill="#fecaca" stroke="#dc2626" stroke-width="2" />
+                            <!-- 水面线 -->
+                            <line x1="10" y1="30" x2="90" y2="30" stroke="#3b82f6" stroke-width="2" />
 
-            updateRgeContent('passive');
-        });
-    </script>
+                            <!-- 自我 (Ego) - 意识和前意识部分 -->
+                            <rect x="25" y="20" width="50" height="20" fill="#fef08a" stroke="#ca8a04" stroke-width="1" />
+                            <text x="50" y="32" font-size="6" fill="#92400e" text-anchor="middle" font-weight="bold">自我 (现实原则)</text>
+
+                            <!-- 超我 (Superego) - 道德规范 -->
+                            <rect x="35" y="40" width="30" height="20" fill="#d1fae5" stroke="#047857" stroke-width="1" />
+                            <text x="50" y="52" font-size="6" fill="#065f46" text-anchor="middle" font-weight="bold">超我 (道德原则)</text>
+                            
+                            <!-- 本我 (Id) - 潜意识部分 -->
+                            <text x="50" y="75" font-size="6" fill="#dc2626" text-anchor="middle" font-weight="bold">本我 (快乐原则)</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点2】精神分析学派（弗洛伊德）</h4>
+                <p class="text-lg font-medium text-gray-700 mb-2">人格的潜意识结构：</p>
+                <div class="grid grid-cols-3 gap-4 text-center text-sm font-medium">
+                    <div class="bg-red-100 p-2 rounded">
+                        <span class="font-bold">本我 (Id)</span><br>快乐原则 / 本能
+                    </div>
+                    <div class="bg-yellow-100 p-2 rounded">
+                        <span class="font-bold">自我 (Ego)</span><br>现实原则 / 协调者
+                    </div>
+                    <div class="bg-green-100 p-2 rounded">
+                        <span class="font-bold">超我 (Superego)</span><br>道德原则 / 理想
+                    </div>
+                </div>
+                <p class="text-sm mt-3 text-gray-600">**学前关键期：** 口唇期（0-1岁）、肛门期（1-3岁）、性器期（3-6岁，出现俄狄浦斯情结）。很多幼儿的行为（如咬人、乱涂画）是本能在寻求满足。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!--             第3次课：探索“孩子为什么是这样”：发展理论（下）           -->
+    <!-- ======================================================= -->
+    <div class="max-w-4xl mx-auto">
+        <h2 class="section-header text-3xl font-bold text-gray-700 mb-8">第3次课：理论流派（下）：行为矫正与认知建构</h2>
+
+        <!-- 知识点1：行为主义学派 (斯金纳/班杜拉) - S-R-O模型对比 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- S-R-O模型对比：新旧行为主义区别 -->
+                        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 斯金纳：S -> R -->
+                            <circle cx="25" cy="30" r="10" fill="#fef08a" />
+                            <text x="25" y="32" font-size="8" fill="#a16207" text-anchor="middle">S (刺激)</text>
+                            <circle cx="75" cy="30" r="10" fill="#93c5fd" />
+                            <text x="75" y="32" font-size="8" fill="#1e40af" text-anchor="middle">R (反应)</text>
+                            <line x1="35" y1="30" x2="65" y2="30" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <text x="50" y="25" font-size="6" fill="#f59e0b" text-anchor="middle">早期行为主义</text>
+
+                            <!-- 班杜拉：S -> O -> R -->
+                            <circle cx="20" cy="75" r="8" fill="#fef08a" />
+                            <text x="20" y="77" font-size="6" fill="#a16207" text-anchor="middle">S</text>
+                            <circle cx="50" cy="75" r="8" fill="#bae6fd" />
+                            <text x="50" y="77" font-size="6" fill="#1e40af" text-anchor="middle">O (内部)</text>
+                            <circle cx="80" cy="75" r="8" fill="#93c5fd" />
+                            <text x="80" y="77" font-size="6" fill="#1e40af" text-anchor="middle">R</text>
+                            <line x1="28" y1="75" x2="42" y2="75" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <line x1="58" y1="75" x2="72" y2="75" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <text x="50" y="65" font-size="6" fill="#10b981" text-anchor="middle">新行为主义</text>
+                            
+                            <defs>
+                                <marker id="arrowhead" markerWidth="5" markerHeight="5" refX="2" refY="3" orient="auto">
+                                    <polygon points="0 0, 5 3, 0 6" fill="currentColor"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点1】行为主义与学习</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>**斯金纳（早期）：** 强调<span class="font-bold text-red-500">正/负强化</span>和<span class="font-bold text-red-500">惩罚</span>对行为的塑造（操作性条件反射）。</li>
+                    <li>**班杜拉（新行为）：** 提出<span class="font-bold text-red-500">观察学习</span>。榜样示范是孩子习得行为的主要途径。</li>
+                    <li>**核心应用：** 矫正不良行为时，应多用<span class="font-bold text-indigo-600">正强化</span>和<span class="font-bold text-indigo-600">积极榜样</span>。</li>
+                </ul>
+                <p class="text-sm italic mt-2 text-gray-500">案例提示：孩子大哭要玩具，家长妥协购买，这是哪种强化？（负强化了孩子的哭闹）</p>
+            </div>
+        </div>
+
+        <!-- 知识点2：认知发展理论（皮亚杰） - 认知平衡流程图 -->
+        <div class="concept-card bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center">
+            <div class="visual-area flex-shrink-0 w-full md:w-1/3 mr-0 md:mr-6 mb-4 md:mb-0">
+                <div class="visual-placeholder rounded-lg flex items-center justify-center p-4">
+                    <div class="svg-container">
+                        <!-- 认知平衡流程图：同化-顺应-平衡 -->
+                        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <style>
+                                .box { fill: #fff; stroke: #059669; stroke-width: 1.5; }
+                                .arrow { stroke: #059669; stroke-width: 2; fill: none; marker-end: url(#triangle); }
+                                .text { font-size: 6px; fill: #059669; font-weight: bold; text-anchor: middle; }
+                            </style>
+                            <defs>
+                                <marker id="triangle" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <polygon points="0 0, 6 3, 0 6" fill="#059669" />
+                                </marker>
+                            </defs>
+
+                            <!-- 平衡 (Equilibration) - 顶部 -->
+                            <rect x="35" y="10" width="30" height="15" class="box" rx="3" />
+                            <text x="50" y="20" class="text">平衡</text>
+                            
+                            <!-- 同化 (Assimilation) - 左侧 -->
+                            <rect x="10" y="45" width="30" height="15" class="box" rx="3" />
+                            <text x="25" y="55" class="text">同化</text>
+                            
+                            <!-- 顺应 (Accommodation) - 右侧 -->
+                            <rect x="60" y="45" width="30" height="15" class="box" rx="3" />
+                            <text x="75" y="55" class="text">顺应</text>
+
+                            <!-- 图式 (Schema) - 底部 -->
+                            <rect x="35" y="80" width="30" height="15" class="box" rx="3" />
+                            <text x="50" y="90" class="text">图式 (结构)</text>
+
+                            <!-- 箭头连接 -->
+                            <path d="M50 25 V45 M25 60 V80 M75 60 V80 M35 17.5 H65 M65 17.5 A 30 30 0 0 1 50 45" class="arrow" style="marker-end:none"/>
+                            <path d="M50 25 L50 45" class="arrow" />
+                            <path d="M25 60 L25 80" class="arrow" />
+                            <path d="M75 60 L75 80" class="arrow" />
+                            <path d="M42.5 80 C 42.5 70, 42.5 70, 42.5 50" class="arrow" /> 
+                            <path d="M57.5 80 C 57.5 70, 57.5 70, 57.5 50" class="arrow" />
+                            <path d="M65 87.5 H90 V 45" class="arrow" style="marker-end:none"/>
+                            <path d="M35 87.5 H10 V 45" class="arrow" style="marker-end:none"/>
+                            
+                            <path d="M25 45 L25 25" class="arrow" />
+                            <path d="M75 45 L75 25" class="arrow" />
+                            
+                            <!-- 外部经验/失衡 -->
+                            <text x="5" y="15" font-size="6" fill="#1d4ed8">经验/失衡</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="text-explanation flex-1">
+                <h4 class="text-2xl font-semibold text-blue-800 mb-3">【知识点2】皮亚杰：思维的建构</h4>
+                <p class="text-lg font-medium text-gray-700 mb-2">核心机制：</p>
+                <div class="grid grid-cols-2 gap-4 text-center text-sm font-medium">
+                    <div class="bg-purple-100 p-2 rounded"><span class="font-bold">同化：</span> 新信息纳入旧图式</div>
+                    <div class="bg-pink-100 p-2 rounded"><span class="font-bold">顺应：</span> 调整图式适应新信息</div>
+                </div>
+                <p class="text-lg font-medium text-gray-700 mt-4 mb-2">学前思维特点（前运算阶段 2-7岁）：</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600">
+                    <li><span class="font-bold text-red-500">自我中心：</span> 难以理解他人视角。</li>
+                    <li><span class="font-bold text-red-500">缺乏守恒：</span> 认为高瘦杯的水更多（只关注一个维度）。</li>
+                    <li><span class="font-bold text-red-500">泛灵论：</span> 认为无生命物体有生命。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
