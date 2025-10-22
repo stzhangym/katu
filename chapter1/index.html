@@ -1,502 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Chapter 1: Overview</title>
-</head>
-<body>
-  <h1>Chapter 1: Overview</h1>
-  <p><!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学前儿童发展心理学 | 交互式概述</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: A top-navigation SPA with three main sections: "心理学基础" (Basics), "主要理论流派" (Theories), and "研究方法与原则" (Methods). This structure breaks down the dense text into logical, user-selectable themes, improving on the original linear format. The "Theories" section uses a secondary tab navigation for each school of thought, allowing for easy comparison and focused study. The primary interactions include clickable stage charts for Piaget and Freud to dynamically display details, and an accordion for research methods, making exploration intuitive and efficient. This design was chosen to transform passive reading into an active, self-directed learning experience. -->
-    <!-- Visualization & Content Choices: 
-        - Psychology Basics: Goal: Inform. Method: Styled cards (HTML/Tailwind) with icons (Unicode) to present key definitions clearly. Justification: Breaks down foundational concepts into digestible pieces.
-        - Piaget's & Freud's Stages: Goal: Show Change/Progression. Method: Interactive horizontal bar charts (timelines) using Chart.js. Interaction: Clicking a stage (bar) updates a dedicated text area with detailed descriptions. Justification: Visualizes temporal progression and makes stage-specific information accessible on demand, which is far more engaging than a static table. Library: Chart.js (Canvas).
-        - Vygotsky's ZPD: Goal: Organize/Explain. Method: A visual diagram built with nested, styled divs (HTML/Tailwind). Interaction: Hover effects could be added for tooltips. Justification: Clearly illustrates the relationship between the three conceptual zones.
-        - Research Methods: Goal: Organize/Inform. Method: An accordion component (HTML/Tailwind + JS). Interaction: Clicking a method's title expands to reveal its details. Justification: Condenses a long list into a clean, scannable interface, preventing information overload.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #FDFBF8;
-            color: #4A4A4A;
-        }
-        .nav-active {
-            color: #0891B2;
-            border-bottom: 2px solid #0891B2;
-            font-weight: 500;
-        }
-        .nav-link {
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-        .tab-active {
-            background-color: #0891B2;
-            color: white;
-        }
-        .tab-inactive {
-            background-color: #F1F5F9;
-            color: #334155;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学前儿童发展心理学 | 第一章 概述</title>
+
+  <!-- 样式与字体 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: #FDFBF8;
+      color: #4A4A4A;
+    }
+    .nav-active { color: #0891B2; border-bottom: 2px solid #0891B2; font-weight: 500; }
+    .nav-link { transition: all 0.3s ease; border-bottom: 2px solid transparent; }
+    .chart-container { width: 100%; max-width: 800px; margin: 2rem auto; }
+  </style>
 </head>
+
 <body class="antialiased">
 
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-cyan-800">学前儿童发展心理学</h1>
-            <div class="hidden md:flex space-x-8">
-                <a href="#basics" class="nav-link nav-active">心理学基础</a>
-                <a href="#theories" class="nav-link">主要理论流派</a>
-                <a href="#methods" class="nav-link">研究方法与原则</a>
-            </div>
-            <div class="md:hidden">
-                <select id="mobile-nav" class="bg-gray-100 border border-gray-300 rounded-md py-1 px-2">
-                    <option value="basics">心理学基础</option>
-                    <option value="theories">主要理论流派</option>
-                    <option value="methods">研究方法与原则</option>
-                </select>
-            </div>
-        </nav>
-    </header>
+  <!-- 顶部导航 -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-cyan-800">学前儿童发展心理学</h1>
+      <div class="hidden md:flex space-x-8">
+        <a href="#basics" class="nav-link nav-active">心理学基础</a>
+        <a href="#theories" class="nav-link">主要理论流派</a>
+        <a href="#methods" class="nav-link">研究方法与原则</a>
+      </div>
+      <div class="md:hidden">
+        <select id="mobile-nav" class="bg-gray-100 border border-gray-300 rounded-md py-1 px-2">
+          <option value="basics">心理学基础</option>
+          <option value="theories">主要理论流派</option>
+          <option value="methods">研究方法与原则</option>
+        </select>
+      </div>
+    </nav>
+  </header>
 
-    <main class="container mx-auto p-4 md:p-8">
-        
-        <!-- Section 1: Psychology Basics -->
-        <section id="basics" class="space-y-12">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-cyan-700 mb-2">心理学基础</h2>
-                <p class="max-w-3xl mx-auto text-gray-600">本节将带您了解心理学的基本定义、其科学的开端，以及心理作为大脑机能的实质。探索心理活动如何反映客观现实，构筑我们内在的精神世界。</p>
-            </div>
+  <!-- 主体内容 -->
+  <main class="container mx-auto p-4 md:p-8">
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-                    <h3 class="text-xl font-semibold mb-3 text-cyan-800 flex items-center"><span class="text-2xl mr-3">✨</span>科学心理学的诞生</h3>
-                    <p class="text-gray-700">心理学作为一门独立科学，其标志性开端是 **1879年** 德国心理学家 **威廉·冯特** 在莱比锡大学创立的世界上第一个心理学实验室，使心理学从哲学中正式脱离。</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-                    <h3 class="text-xl font-semibold mb-3 text-cyan-800 flex items-center"><span class="text-2xl mr-3">🧠</span>心理的实质</h3>
-                    <p class="text-gray-700">科学证明，心理是**大脑的机能**，是大脑这一高级器官对内外信息的加工过程。古代曾误认为“心”或“肝、胆”是心理器官，但现代科学已明确**大脑**的核心地位。</p>
-                    <div class="mt-2 text-sm text-gray-600"><strong>案例：</strong>“裂脑人”研究表明，大脑左右半球功能分离会影响思维和语言，这有力地证明了心理活动与大脑的密切关系。</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-                    <h3 class="text-xl font-semibold mb-3 text-cyan-800 flex items-center"><span class="text-2xl mr-3">🌐</span>心理与客观现实</h3>
-                    <p class="text-gray-700">心理是**大脑对客观现实主观能动的反映**。它既来源于客观世界（客观性），又是个体主动的、带有个人色彩的建构过程（主观能动性），而非简单的镜面反射。</p>
-                </div>
-            </div>
-        </section>
+    <!-- 心理学基础 -->
+    <section id="basics" class="mb-12">
+      <h2 class="text-2xl font-bold text-cyan-700 mb-4">心理学基础</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">
+        心理学是研究人类行为与心理过程的科学。对于学前儿童发展心理学而言，
+        它关注个体在早期阶段的认知、情感、语言与社会性成长。
+      </p>
 
-        <!-- Section 2: Main Theories -->
-        <section id="theories" class="space-y-12 hidden">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-cyan-700 mb-2">主要理论流派</h2>
-                <p class="max-w-3xl mx-auto text-gray-600">众多心理学家从不同视角探索儿童心理的奥秘，形成了各自的理论体系。本节将带您深入了解五大主流学派的核心观点，通过交互式图表探索儿童心理发展的阶段性规律。</p>
-            </div>
-            
-            <div id="theory-tabs" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
-                <button data-theory="gesell" class="theory-tab tab-active px-4 py-2 text-sm md:text-base font-medium rounded-full shadow-sm transition-all duration-300">成熟势力说</button>
-                <button data-theory="freud" class="theory-tab tab-inactive px-4 py-2 text-sm md:text-base font-medium rounded-full shadow-sm transition-all duration-300">精神分析</button>
-                <button data-theory="behaviorism" class="theory-tab tab-inactive px-4 py-2 text-sm md:text-base font-medium rounded-full shadow-sm transition-all duration-300">行为主义</button>
-                <button data-theory="piaget" class="theory-tab tab-inactive px-4 py-2 text-sm md:text-base font-medium rounded-full shadow-sm transition-all duration-300">认知发展</button>
-                <button data-theory="vygotsky" class="theory-tab tab-inactive px-4 py-2 text-sm md:text-base font-medium rounded-full shadow-sm transition-all duration-300">文化历史</button>
-            </div>
+      <div class="chart-container">
+        <canvas id="chartBasics"></canvas>
+      </div>
+    </section>
 
-            <div id="theory-content" class="bg-white p-6 md:p-8 rounded-lg shadow-inner border border-gray-100 min-h-[400px]">
-                <!-- Gesell Content -->
-                <div id="gesell-content" class="theory-panel space-y-4">
-                    <h3 class="text-2xl font-bold text-cyan-800">成熟势力说 (Gesell)</h3>
-                    <p class="text-gray-700">美国心理学家格塞尔认为，支配儿童心理发展的核心因素是**成熟**，即由内部基因决定的、自然的生长过程。学习和环境只在机体成熟到一定程度时才能发挥作用。</p>
-                    <div class="bg-cyan-50 border-l-4 border-cyan-500 text-cyan-900 p-4 rounded-r-lg">
-                        <p class="font-semibold">核心观点：不成熟，无从学习。</p>
-                        <p class="mt-1">他著名的“双生子爬梯实验”表明，过早的训练效果甚微，而当孩子生理成熟到“准备”状态时，学习会事半功倍。这一理论是反对“小学化”教育的重要依据。</p>
-                    </div>
-                </div>
-                <!-- Freud Content -->
-                <div id="freud-content" class="theory-panel space-y-4 hidden">
-                    <h3 class="text-2xl font-bold text-cyan-800">精神分析学派 (Freud)</h3>
-                    <p class="text-gray-700">弗洛伊德认为，人格发展由**本能**（尤其是性本能“力比多”）驱动，并由**本我、自我、超我**三部分构成。他根据力比多在不同时期的集中区域，划分了人格发展的五个阶段。</p>
-                    <p class="text-center font-medium text-gray-600">点击下方图表中的阶段以查看详细信息：</p>
-                     <div class="chart-container">
-                        <canvas id="freudChart"></canvas>
-                    </div>
-                    <div id="freud-stage-details" class="bg-gray-50 p-4 rounded-md border min-h-[100px] transition-all duration-300">
-                        <p class="text-gray-500">请选择一个阶段进行探索。</p>
-                    </div>
-                </div>
-                <!-- Behaviorism Content -->
-                <div id="behaviorism-content" class="theory-panel space-y-4 hidden">
-                    <h3 class="text-2xl font-bold text-cyan-800">行为主义学派 (Watson, Skinner, Bandura)</h3>
-                    <p class="text-gray-700">行为主义认为心理学应只研究可观察的**行为**，而非内在意识。行为的发展被看作是环境刺激与个体反应之间联结的形成过程，即学习的过程。</p>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                            <h4 class="font-semibold text-blue-800">S-R 模式 (华生)</h4>
-                            <p>早期的行为主义强调“刺激(S) → 反应(R)”，认为行为是对环境刺激的直接反应，是**环境决定论**的代表。</p>
-                        </div>
-                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-                            <h4 class="font-semibold text-green-800">观察学习 (班杜ラ)</h4>
-                            <p>个体通过观察他人的行为（榜样）及其后果来进行学习。**替代强化**是核心概念之一，即观察到他人行为受奖惩而影响自身行为。</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Piaget Content -->
-                <div id="piaget-content" class="theory-panel space-y-4 hidden">
-                    <h3 class="text-2xl font-bold text-cyan-800">认知发展理论 (Piaget)</h3>
-                    <p class="text-gray-700">瑞士心理学家皮亚杰认为，儿童是主动的思考者，其认知发展是在与环境的相互作用中，通过**同化**（将新信息纳入现有认知结构）和**顺应**（调整认知结构以适应新信息）两种机制，不断从一个平衡状态到下一个更高级平衡状态的过程。</p>
-                    <p class="text-center font-medium text-gray-600">点击下方图表中的阶段以查看详细信息：</p>
-                    <div class="chart-container">
-                        <canvas id="piagetChart"></canvas>
-                    </div>
-                    <div id="piaget-stage-details" class="bg-gray-50 p-4 rounded-md border min-h-[100px] transition-all duration-300">
-                        <p class="text-gray-500">请选择一个阶段进行探索。</p>
-                    </div>
-                </div>
-                <!-- Vygotsky Content -->
-                <div id="vygotsky-content" class="theory-panel space-y-4 hidden">
-                     <h3 class="text-2xl font-bold text-cyan-800">文化历史理论 (Vygotsky)</h3>
-                    <p class="text-gray-700">维果茨基强调，个体的高级心理机能（如思维、语言）是在**社会文化历史**背景下，通过与他人（尤其是成人）的交往和协作而产生和发展的，是外部活动不断**内化**的结果。</p>
-                    <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                        <h4 class="font-bold text-purple-800">核心思想：最近发展区 (ZPD)</h4>
-                        <p class="mt-2">ZPD是指儿童**现有发展水平**（能独立完成的任务）与**潜在发展水平**（在成人或更有能力同伴的指导下能完成的任务）之间的区域。这是教学和干预最有效的区域。</p>
-                        <p class="mt-1 text-sm">教育的意义在于**“走在发展的前面”**，通过提供适当的“支架”来引导儿童跨越最近发展区。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- 主要理论流派 -->
+    <section id="theories" class="mb-12">
+      <h2 class="text-2xl font-bold text-cyan-700 mb-4">主要理论流派</h2>
+      <ul class="list-disc pl-6 space-y-2 text-gray-700">
+        <li><b>皮亚杰的认知发展理论：</b>强调儿童思维的阶段性变化。</li>
+        <li><b>维果茨基的社会文化理论：</b>认为学习是社会互动与文化传递的过程。</li>
+        <li><b>埃里克森的心理社会发展理论：</b>聚焦个体身份与信任感的建立。</li>
+      </ul>
+    </section>
 
-        <!-- Section 3: Research Methods -->
-        <section id="methods" class="space-y-8 hidden">
-             <div class="text-center">
-                <h2 class="text-3xl font-bold text-cyan-700 mb-2">研究原则与方法</h2>
-                <p class="max-w-3xl mx-auto text-gray-600">科学地研究儿童心理，必须遵循特定的原则和运用恰当的方法。本节将介绍研究者必须遵守的三大基本原则，并展示五种常用的研究方法及其特点，助您理解心理学研究的严谨性。</p>
-            </div>
-            
-            <div>
-                <h3 class="text-2xl font-semibold text-cyan-800 mb-4 text-center">三大基本原则</h3>
-                <div class="grid md:grid-cols-3 gap-6 text-center">
-                    <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
-                        <div class="text-3xl mb-2">⚖️</div>
-                        <h4 class="font-bold text-lg">客观性原则</h4>
-                        <p class="text-sm text-gray-600">依据客观事实，结论以充分材料为据，避免主观臆断。</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
-                        <div class="text-3xl mb-2">📈</div>
-                        <h4 class="font-bold text-lg">发展性原则</h4>
-                        <p class="text-sm text-gray-600">用发展的眼光看待儿童，承认其心理的方向性、阶段性和差异性。</p>
-                    </div>
-                     <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
-                        <div class="text-3xl mb-2">🛡️</div>
-                        <h4 class="font-bold text-lg">教育性原则</h4>
-                        <p class="text-sm text-gray-600">研究设计与过程必须对儿童身心发展负责，符合伦理道德。</p>
-                    </div>
-                </div>
-            </div>
+    <!-- 研究方法与原则 -->
+    <section id="methods">
+      <h2 class="text-2xl font-bold text-cyan-700 mb-4">研究方法与原则</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">
+        儿童发展心理学的研究方法包括观察法、实验法与纵向研究等。
+        研究应遵循尊重儿童、保护隐私、促进发展的伦理原则。
+      </p>
 
-            <div>
-                <h3 class="text-2xl font-semibold text-cyan-800 mb-4 text-center">常用研究方法</h3>
-                <div id="accordion-container" class="space-y-3 max-w-4xl mx-auto">
-                    <!-- Accordion items will be generated by JS -->
-                </div>
-            </div>
-        </section>
+      <div class="bg-gray-50 border-l-4 border-cyan-500 p-4 rounded-lg">
+        <h3 class="font-semibold text-cyan-700 mb-2">研究注意事项：</h3>
+        <ul class="list-disc pl-5 text-gray-700">
+          <li>确保研究环境的安全与自然性。</li>
+          <li>在父母知情同意的前提下进行观察。</li>
+          <li>避免对儿童造成任何心理或情绪压力。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
 
-    </main>
+  <!-- 页脚 -->
+  <footer class="text-center py-6 mt-12 border-t">
+    <p class="text-gray-500 text-sm">&copy; 2025 学前儿童发展心理学交互式课程</p>
+  </footer>
 
-    <footer class="text-center py-6 mt-12 border-t">
-        <p class="text-gray-500 text-sm">&copy; 2025 学前儿童发展心理学交互式概述</p>
-    </footer>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const mainLinks = document.querySelectorAll('.nav-link');
-    const mobileNav = document.getElementById('mobile-nav');
-    const sections = document.querySelectorAll('main section');
-
-    const theoryTabs = document.querySelectorAll('.theory-tab');
-    const theoryPanels = document.querySelectorAll('.theory-panel');
-
-    const data = {
-        piagetStages: [
-            { name: '感知运动阶段', age: '0-2岁', details: '儿童主要通过感觉和动作与世界互动，发展出客体永恒性，即知道物体即使看不见也依然存在。认知结构是感知运动图式。' },
-            { name: '前运算阶段', age: '2-7岁', details: '儿童开始使用符号（语言、表象）进行思考，但思维具有自我中心、泛灵论、不可逆和缺乏守恒等特点。思维有了质的飞跃。' },
-            { name: '具体运算阶段', age: '7-12岁', details: '儿童能够进行逻辑思考，但仅限于具体、可感知的事物。掌握了守恒概念和可逆性，能够进行分类和排序。' },
-            { name: '形式运算阶段', age: '12岁+', details: '青少年能够进行抽象思维和假设演绎推理，能够思考可能性和未来，思维接近成人水平。' }
-        ],
-        freudStages: [
-            { name: '口唇期', age: '0-1岁', details: '快感主要集中在口腔活动，如吮吸、咀嚼。此阶段的满足与否则会影响到个体日后乐观或悲观的性格特质。' },
-            { name: '肛门期', age: '1-3岁', details: '快感来自于排泄和控制排泄。不当的如厕训练可能导致固执、吝啬或浪费等性格。' },
-            { name: '性器期', age: '3-6岁', details: '快感转移到性器官。此阶段会出现“俄狄浦斯情结”（恋母/恋父），并最终通过认同同性父母来解决冲突。' },
-            { name: '潜伏期', age: '6-11岁', details: '性冲动被压抑，儿童将精力转向学习、交友和发展各种社会技能。' },
-            { name: '青春期', age: '12岁+', details: '随着生理成熟，性冲动再次被唤醒，个体开始寻求与异性建立亲密关系。' }
-        ],
-        researchMethods: [
-            { name: '观察法', details: '在自然状态下，有目的、有计划地观察并记录行为。优点是真实自然，是研究儿童最基本的方法。缺点是无法控制变量。' },
-            { name: '实验法', details: '通过严格控制自变量，观察其对因变量的影响。优点是能确定因果关系。缺点是环境人为性较强，难以完全反映自然行为。' },
-            { name: '访谈/临床法', details: '通过问答的方式深入了解儿童的内心想法和认知结构，如皮亚杰的临床访谈。优点是灵活深入。缺点是主试者的影响大，且需要高度技巧。' },
-            { name: '测验法', details: '使用标准化量表或测验工具来评估儿童的某种心理特质，如智力、人格。优点是结果量化且易于比较。缺点是测验情境的限制性和文化差异性。' },
-            { name: '个案法', details: '对单个儿童或特定群体的心理发展进行深入、详细的纵向研究。优点是能提供丰富的细节资料。缺点是研究结果难以普遍推广。' }
-        ],
-        // The following variables were erronously included in the data object and are removed.
-        // name:/g,
-        // '<p class="mt-1 text-sm">教育的意义在于**“走在发展的前面”**，通过提供适当的“支架”来引导儿童跨越最近发展区。</p>'
-    };
-
-    let piagetChart, freudChart;
-
-    // --- Main Navigation Logic ---
-    const showSection = (id) => {
-        sections.forEach(section => {
-            section.classList.add('hidden');
-        });
-        const activeSection = document.getElementById(id);
-        if (activeSection) {
-            activeSection.classList.remove('hidden');
-        }
-
-        // Update Nav Links
-        mainLinks.forEach(link => {
-            if (link.getAttribute('href').substring(1) === id) {
-                link.classList.add('nav-active');
-            } else {
-                link.classList.remove('nav-active');
-            }
-        });
-        
-        // Ensure charts render when switching to the theories section
-        if (id === 'theories') {
-            // Re-render only the currently active theory content if available
-            const activeTab = document.querySelector('.theory-tab.tab-active');
-            if (activeTab) {
-                showTheory(activeTab.dataset.theory);
-            } else {
-                showTheory('gesell'); // Default to Gesell
-            }
-        }
-    };
-
-    mainLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const id = link.getAttribute('href').substring(1);
-            showSection(id);
-            window.location.hash = id;
-        });
+  <!-- 脚本 -->
+  <script>
+    // 导航高亮
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('nav-active'));
+        link.classList.add('nav-active');
+      });
     });
 
-    mobileNav.addEventListener('change', (e) => {
-        const id = e.target.value;
-        showSection(id);
-        window.location.hash = id;
+    // 移动端导航跳转
+    document.getElementById('mobile-nav').addEventListener('change', function() {
+      location.hash = this.value;
     });
 
-    // Check URL hash on load
-    const initialSection = window.location.hash ? window.location.hash.substring(1) : 'basics';
-    showSection(initialSection);
-
-    // --- Theory Tabs Logic ---
-    const showTheory = (theoryId) => {
-        theoryPanels.forEach(panel => {
-            panel.classList.add('hidden');
-        });
-        document.getElementById(`${theoryId}-content`).classList.remove('hidden');
-
-        theoryTabs.forEach(tab => {
-            if (tab.dataset.theory === theoryId) {
-                tab.classList.replace('tab-inactive', 'tab-active');
-            } else {
-                tab.classList.replace('tab-active', 'tab-inactive');
-            }
-        });
-    };
-
-    theoryTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            showTheory(tab.dataset.theory);
-        });
+    // 绘制图表
+    const ctx = document.getElementById('chartBasics');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['认知发展', '语言能力', '社会性', '情绪调节'],
+        datasets: [{
+          label: '学前阶段平均发展水平（相对指标）',
+          data: [80, 70, 75, 65],
+          backgroundColor: '#22d3ee'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
     });
+  </script>
 
-    // --- Accordion Logic ---
-    const renderAccordion = () => {
-        const container = document.getElementById('accordion-container');
-        let html = '';
-        data.researchMethods.forEach((method, index) => {
-            const accordionId = `method-${index}`;
-            html += `
-                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-                    <button class="accordion-header w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" data-accordion="${accordionId}">
-                        <span class="font-semibold text-lg text-cyan-800">${method.name}</span>
-                        <span class="text-xl text-gray-500 transform transition-transform duration-300">▶</span>
-                    </button>
-                    <div id="${accordionId}" class="accordion-content p-4 bg-white text-gray-700">
-                        <p>${method.details}</p>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const targetId = this.dataset.accordion;
-                const targetContent = document.getElementById(targetId);
-                const icon = this.querySelector('span:last-child');
-                const isActive = this.classList.contains('active');
-
-                // Close all others
-                document.querySelectorAll('.accordion-header').forEach(h => {
-                    if (h !== this && h.classList.contains('active')) {
-                        const otherContent = document.getElementById(h.dataset.accordion);
-                        const otherIcon = h.querySelector('span:last-child');
-                        otherContent.style.maxHeight = 0;
-                        otherIcon.classList.remove('rotate-90');
-                        h.classList.remove('active');
-                    }
-                });
-
-                // Toggle current
-                if (isActive) {
-                    targetContent.style.maxHeight = 0;
-                    icon.classList.remove('rotate-90');
-                    this.classList.remove('active');
-                } else {
-                    targetContent.style.maxHeight = targetContent.scrollHeight + "px";
-                    icon.classList.add('rotate-90');
-                    this.classList.add('active');
-                }
-            });
-        });
-    };
-
-    // --- Chart & Interaction Logic ---
-    const renderCharts = () => {
-        // Destroy existing charts to prevent memory leak and redraw on content change
-        if (piagetChart) piagetChart.destroy();
-        if (freudChart) freudChart.destroy();
-
-        const piagetCtx = document.getElementById('piagetChart');
-        if (piagetCtx) {
-             piagetChart = new Chart(piagetCtx, {
-                type: 'bar',
-                data: {
-                    labels: data.piagetStages.map(s => `${s.name} (${s.age})`),
-                    datasets: [{
-                        label: '年龄跨度',
-                        data: [2, 5, 5, 6], // 0-2, 2-7, 7-12, 12-18(approx)
-                        backgroundColor: ['#67E8F9', '#22D3EE', '#06B6D4', '#0891B2'],
-                        borderColor: '#0E7490',
-                        borderWidth: 1,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.7
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                        title: { display: true, text: '皮亚杰认知发展阶段', font: { size: 16 }, color: '#334155' }
-                    },
-                    scales: {
-                        x: { stacked: true, grid: { display: false }, ticks: { display: false } },
-                        y: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 }, color: '#475569' }}
-                    },
-                    onClick: (e) => {
-                        const activePoints = piagetChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-                        if (activePoints.length) {
-                            const index = activePoints[0].index;
-                            updateDetails('piaget-stage-details', data.piagetStages[index]);
-                        }
-                    }
-                }
-            });
-        }
-
-        const freudCtx = document.getElementById('freudChart');
-        if (freudCtx) {
-            freudChart = new Chart(freudCtx, {
-                type: 'bar',
-                data: {
-                    labels: data.freudStages.map(s => `${s.name} (${s.age})`),
-                    datasets: [{
-                        label: '年龄跨度',
-                        data: [1, 2, 3, 5, 6], // 0-1, 1-3, 3-6, 6-11, 12+
-                        backgroundColor: ['#FBCFE8', '#F9A8D4', '#F472B6', '#EC4899', '#DB2777'],
-                        borderColor: '#BE185D',
-                        borderWidth: 1,
-                         barPercentage: 0.6,
-                        categoryPercentage: 0.7
-                    }]
-                },
-                 options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                        title: { display: true, text: '弗洛伊德性心理发展阶段', font: { size: 16 }, color: '#334155' }
-                    },
-                    scales: {
-                        x: { stacked: true, grid: { display: false }, ticks: { display: false } },
-                        y: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 }, color: '#475569' }}
-                    },
-                    onClick: (e) => {
-                        const activePoints = freudChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-                        if (activePoints.length) {
-                            const index = activePoints[0].index;
-                            updateDetails('freud-stage-details', data.freudStages[index]);
-                        }
-                    }
-                }
-            });
-        }
-    };
-    
-    const updateDetails = (elementId, content) => {
-        const container = document.getElementById(elementId);
-        container.innerHTML = `
-            <h4 class="font-bold text-lg text-gray-800">${content.name} (${content.age})</h4>
-            <p class="mt-1 text-gray-700">${content.details}</p>
-        `;
-    };
-
-    renderAccordion();
-    renderCharts();
-});
-</script>
-</body>
-</html>
-.</p>
-  <a href="../index.html">← Back to Table of Contents</a>
 </body>
 </html>
