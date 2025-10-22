@@ -1,336 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>儿童发展心理学 | 交互式信息图</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Brilliant Blues -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear dashboard structure. The content from the four presentation chapters is regrouped into four user-centric themes: 1) The Developing Brain & Body, 2) How Children Think & Learn, 3) Nature vs. Nurture, Revisited, and 4) The Surprising World of the Infant. This structure facilitates exploration by grouping related concepts (e.g., all brain mechanisms together) rather than following the report's linear order. User flow is guided by a sticky navigation bar and interactive elements like clickable steppers and diagrams to encourage discovery. This design was chosen for superior usability and to make complex psychological concepts more digestible and engaging. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Executive Functions (EF). Goal: Compare/Inform. Viz: Radar Chart (Chart.js/Canvas). Interaction: Tooltips on hover provide details. Justification: A radar chart is ideal for showing the interconnectedness and relative importance of the three core EF components.
-        - Report Info: Gene-Environment Correlation (rGE). Goal: Organize. Viz: Interactive Stepper (HTML/CSS/JS). Interaction: Users click steps (Passive, Evocative, Active) to reveal detailed explanations. Justification: Breaks down a complex, multi-stage concept into manageable, interactive steps.
-        - Report Info: Brain Development Timeline. Goal: Change. Viz: Timeline Diagram (HTML/CSS/Tailwind). Interaction: Subtle hover effects. Justification: Visually represents the sequence of key brain development events over time.
-        - Report Info: Brain Plasticity. Goal: Compare. Viz: Two-column layout with icons (Unicode). Interaction: Static comparison. Justification: A clear side-by-side view is the most effective way to contrast the two plasticity types.
-        - All diagrams (e.g., flowcharts) are built with structured HTML and Tailwind, adhering to the NO SVG/Mermaid constraint.
-     -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #F0F4F8; /* Light gray-blue from a similar palette */
-        }
-        .nav-link.active {
-            color: #F39C12;
-            border-bottom-color: #F39C12;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px; 
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-        .stepper-item.active div:first-child {
-            background-color: #0074B7;
-            color: white;
-        }
-        .stepper-item.active p {
-            font-weight: 600;
-            color: #0074B7;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Introduction</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      line-height: 1.6;
+    }
+    h1 {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 10px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 8px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #0066cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body class="text-gray-800">
+<body>
+  <h1>导入部分 Introduction</h1>
+  <p>这是一个发展心理学学习的database</p>
 
-    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center">
-                    <h1 class="text-2xl md:text-3xl font-bold text-[#003B73]">儿童发展心理学</h1>
-                </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#brain" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">大脑与身体</a>
-                    <a href="#learning" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">思维与学习</a>
-                    <a href="#nature-nurture" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">遗传与环境</a>
-                    <a href="#infant" class="nav-link text-gray-600 hover:text-[#0074B7] font-medium border-b-2 border-transparent transition-colors duration-300 py-1">婴儿的世界</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold text-[#003B73] sm:text-5xl md:text-6xl">经典理论与前沿洞察</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">一份关于儿童发展的交互式指南，整合了从表观遗传学到执行功能的最新研究。</p>
-        </div>
-
-        <section id="brain" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">大脑与身体的发展</h3>
-            <div class="bg-white rounded-2xl shadow-lg p-8 grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-4">大脑发展的两大核心机制</h4>
-                    <p class="mb-6">儿童大脑的发育并非简单的线性增长，而是经历着精密的“建造与雕琢”过程。理解突触修剪和脑的可塑性，是理解早期教育重要性的关键。</p>
-                    <div class="space-y-6">
-                        <div class="p-4 bg-[#BFD7ED]/30 rounded-lg">
-                            <h5 class="font-bold text-lg text-[#003B73]">突触发生与修剪 (0-2岁+)</h5>
-                            <p class="text-gray-600">大脑在早期会产生海量连接（发生），然后根据“用进废退”原则，剪除不常用的连接（修剪），使神经网络更高效。</p>
-                        </div>
-                        <div class="p-4 bg-[#BFD7ED]/30 rounded-lg">
-                            <h5 class="font-bold text-lg text-[#003B73]">脑的可塑性</h5>
-                            <p class="text-gray-600"><strong>经验期待型:</strong> 依赖于物种普遍预期的环境刺激（如语言、光线），发生在关键期。 <br><strong>经验依赖型:</strong> 依赖于个体独特经验（如学钢琴），是终身学习的基础。</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 md:mt-0">
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-4 text-center">动作是认知的催化剂</h4>
-                     <div class="relative p-6 border-l-2 border-[#60A3D9] space-y-8">
-                        <div class="relative">
-                            <div class="absolute -left-[11px] top-1/2 -translate-y-1/2 w-5 h-5 bg-[#0074B7] rounded-full"></div>
-                            <p class="ml-8"><strong class="text-[#003B73]">学会爬行</strong> <span class="text-2xl mx-2">→</span> 增强空间记忆能力</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -left-[11px] top-1/2 -translate-y-1/2 w-5 h-5 bg-[#0074B7] rounded-full"></div>
-                            <p class="ml-8"><strong class="text-[#003B73]">学会行走</strong> <span class="text-2xl mx-2">→</span> 增加社会参照行为</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="learning" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">思维与学习的机制</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">儿童如何思考？现代心理学认为，大脑的“执行功能”是关键。它如同电脑的操作系统，调控着我们的注意力、记忆和灵活性。</p>
-            <div class="bg-white rounded-2xl shadow-lg p-8 grid lg:grid-cols-2 gap-12 items-center">
-                <div class="flex flex-col justify-center">
-                    <h4 class="text-2xl font-semibold text-[#0074B7] mb-2">大脑的“总经理”：执行功能 (EF)</h4>
-                    <p class="text-gray-600 mb-4">EF是预测长期成功的关键因素，其三大核心成分协同工作，构成了高阶认知控制的基础。</p>
-                     <div class="space-y-3 text-left">
-                        <p><strong>1. 抑制控制:</strong> 抵抗干扰，控制冲动。</p>
-                        <p><strong>2. 工作记忆:</strong> 心算、听指令记步骤。</p>
-                        <p><strong>3. 认知灵活性:</strong> 快速切换思维和视角。</p>
-                    </div>
-                     <div class="mt-6 p-4 bg-[#BFD7ED]/30 rounded-lg">
-                        <h5 class="font-bold text-lg text-[#003B73]">有效干预策略</h5>
-                        <p class="text-gray-600">研究表明，整体性活动如**复杂运动（武术、舞蹈）、音乐教育、正念训练**能更有效地提升EF。</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="chart-container">
-                        <canvas id="efChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="nature-nurture" class="mb-20 scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">遗传与环境的动态协同</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">“先天还是后天？”这个古老的问题有了新的答案。现代科学揭示了基因与环境之间复杂的、双向的动态舞蹈。</p>
-            <div class="bg-white rounded-2xl shadow-lg p-8">
-                <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div data-step="passive" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent active">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">1</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">被动型</p>
-                    </div>
-                     <div data-step="evocative" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">2</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">唤起型</p>
-                    </div>
-                     <div data-step="active" class="stepper-item text-center cursor-pointer p-4 border-b-4 border-transparent">
-                        <div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold transition-colors duration-300">3</div>
-                        <p class="mt-2 font-medium text-gray-700 transition-colors duration-300">主动型</p>
-                    </div>
-                </div>
-                <div id="rge-content" class="p-6 bg-[#BFD7ED]/30 rounded-lg min-h-[120px] flex items-center justify-center">
-                </div>
-                <div class="mt-8 pt-8 border-t border-gray-200">
-                    <h4 class="text-2xl font-semibold text-center text-[#0074B7] mb-4">表观遗传学：环境作为“基因开关”</h4>
-                    <p class="text-center max-w-2xl mx-auto">环境压力、营养、甚至父母的关爱行为（如舔舐）可以通过**甲基化**等机制，开启或关闭某些基因的表达，但不改变DNA序列。童年创伤可能永久性“打开”应激基因，导致高焦虑水平。</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="infant" class="scroll-mt-24">
-            <h3 class="text-3xl font-bold text-center text-[#003B73] mb-12">婴儿的惊人世界</h3>
-            <p class="text-center max-w-3xl mx-auto mb-12 text-gray-500">与传统观念不同，现代研究发现婴儿并非“白板一块”。他们生来就具备了令人惊讶的认知和知觉能力，是积极主动的学习者。</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                    <p class="text-5xl mb-3">👶</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">人脸识别</h4>
-                    <p class="mt-2 text-gray-600">新生儿天生就对人脸图像有偏好，这是社会性发展的生物学基础。</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                    <p class="text-5xl mb-3">🎲</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">核心知识系统</h4>
-                    <p class="mt-2 text-gray-600">婴儿似乎天生拥有对物理、数字和生物运动的基本直觉，能对违反物理规律的事件感到惊讶。</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg p-6 text-center md:col-span-2 lg:col-span-1">
-                     <p class="text-5xl mb-3">🔊👁️</p>
-                    <h4 class="text-xl font-bold text-[#0074B7]">跨通道知觉</h4>
-                    <p class="mt-2 text-gray-600">新生儿就能整合来自不同感官（如视觉和听觉）的信息，例如将声音与嘴型匹配起来。</p>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer class="mt-20 bg-white border-t">
-        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500">
-            <p>&copy; 2025 儿童发展心理学课程资料. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.4
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === `#${id}`) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-            
-            const efChartCtx = document.getElementById('efChart').getContext('2d');
-            new Chart(efChartCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['抑制控制', ['工作记忆', '(Working Memory)'], '认知灵活性'],
-                    datasets: [{
-                        label: '核心执行功能',
-                        data: [90, 85, 80],
-                        backgroundColor: 'rgba(0, 116, 183, 0.2)',
-                        borderColor: '#0074B7',
-                        pointBackgroundColor: '#0074B7',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#0074B7'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: {
-                                color: '#BFD7ED'
-                            },
-                            grid: {
-                                color: '#BFD7ED'
-                            },
-                            pointLabels: {
-                                font: {
-                                    size: 14,
-                                    family: "'Noto Sans SC', sans-serif"
-                                },
-                                color: '#003B73'
-                            },
-                            ticks: {
-                                backdropColor: '#F0F4F8',
-                                color: '#0074B7',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                           display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    const item = tooltipItems[0];
-                                    let label = item.chart.data.labels[item.dataIndex];
-                                    if (Array.isArray(label)) {
-                                      return label.join(' ');
-                                    } else {
-                                      return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const rgeData = {
-                passive: {
-                    title: '被动型：父母提供环境',
-                    description: '在儿童早期，父母根据自己的遗传倾向为孩子提供成长环境。例如，热爱阅读的父母家里藏书丰富，孩子自然也处在书香环境中。'
-                },
-                evocative: {
-                    title: '唤起型：孩子唤起反应',
-                    description: '孩子天生的气质会“唤起”他人的特定反应。一个爱笑、外向的孩子会得到更多积极的社交互动，这反过来又强化了他的社交倾向。'
-                },
-                active: {
-                    title: '主动型：孩子主动选择',
-                    description: '随着年龄增长，儿童和青少年会主动寻找与自己遗传倾向相匹配的环境，即“ niches picking”（选择小环境）。例如，有运动天赋的孩子会主动加入校队。'
-                }
-            };
-            
-            const stepperItems = document.querySelectorAll('.stepper-item');
-            const rgeContentEl = document.getElementById('rge-content');
-
-            function updateRgeContent(step) {
-                const data = rgeData[step];
-                rgeContentEl.innerHTML = `
-                    <div class="fade-in">
-                        <h5 class="font-bold text-xl text-center text-[#003B73] mb-2">${data.title}</h5>
-                        <p class="text-center text-gray-700">${data.description}</p>
-                    </div>
-                `;
-            }
-
-            stepperItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    stepperItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    const step = item.dataset.step;
-                    updateRgeContent(step);
-                });
-            });
-
-            updateRgeContent('passive');
-        });
-    </script>
+  <h2>章节索引 Table of Contents</h2>
+  <ul>
+    <li><a href="chapter1/">Chapter 1: Overview</a></li>
+    <li><a href="chapter2/">Chapter 2: Main Features</a></li>
+  </ul>
 </body>
 </html>
+
