@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学前儿童记忆发展互动测验 - 单页模式</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+        }
+        .quiz-container {
+            max-width: 900px;
+            min-height: 80vh;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .option-item:hover {
+            background-color: #f1f5f9;
+        }
+        .correct {
+            background-color: #d1fae5 !important; /* Green 100 */
+            border-color: #10b981 !important; /* Green 500 */
+        }
+        .incorrect {
+            background-color: #fee2e2 !important; /* Red 100 */
+            border-color: #ef4444 !important; /* Red 500 */
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .feedback-area {
+            border-left: 5px solid #3b82f6; /* Blue 500 */
+            background-color: #eff6ff; /* Blue 50 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <header class="text-center mb-8 pb-4 border-b border-blue-200">
+            <h1 class="text-3xl font-bold text-blue-700">学前教育记忆发展理论与应用测验</h1>
+            <p id="progress-text" class="text-lg text-gray-500 mt-2">进度: 1 / 20</p>
+        </header>
+
+        <!-- 当前题目展示区域 -->
+        <main class="flex-grow flex flex-col justify-center items-center">
+            <div id="current-question-card" class="w-full">
+                <!-- 题目内容将通过JavaScript填充 -->
+            </div>
+        </main>
+        
+        <!-- 控制按钮区域 -->
+        <footer class="mt-8 pt-4 border-t border-gray-200 flex justify-between items-center">
+            <button id="prev-btn" class="px-6 py-3 bg-gray-300 text-gray-700 font-medium rounded-xl shadow-md transition duration-150 hover:bg-gray-400 disabled:opacity-50" disabled>
+                <i class="fa-solid fa-chevron-left mr-2"></i> 上一题
+            </button>
+            <button id="next-btn" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl shadow-lg transition duration-150 hover:bg-blue-700 disabled:bg-gray-400">
+                下一题 <i class="fa-solid fa-chevron-right ml-2"></i>
+            </button>
+        </footer>
+    </div>
+
+    <script>
+        // 测验数据：包含所有问题、选项、正确答案和解析
+        const quizData = [
+            // -----------------------------------------------------
+            // 10道选择题
+            // -----------------------------------------------------
+            {
+                type: 'MC',
+                question: "根据记忆信息三级加工模型，下列关于**感觉记忆**的特点描述中，最准确的一项是：",
+                options: [
+                    { text: "容量小，保持时间长达数小时。", isCorrect: false },
+                    { text: "容量大，但保持时间极短，通常在数秒之内。", isCorrect: true },
+                    { text: "容量无限，主要储存语义信息。", isCorrect: false },
+                    { text: "容量有限，被称为工作记忆。", isCorrect: false }
+                ],
+                rationale: "感觉记忆负责对外界信息进行瞬时登记，具有**大容量、极短时限**的特点，是信息输入的第一站。",
+                hint: "知识点：记忆信息三级加工模型"
+            },
+            {
+                type: 'MC',
+                question: "学前儿童的记忆以何种分类占主导地位？这一主导类型限制了他们对抽象语词的理解和记忆。",
+                options: [
+                    { text: "语义记忆", isCorrect: false },
+                    { text: "运动记忆", isCorrect: false },
+                    { text: "形象记忆", isCorrect: true },
+                    { text: "情绪记忆", isCorrect: false }
+                ],
+                rationale: "学前儿童的思维和记忆特点是直观形象的，他们善于记忆具体、生动、色彩鲜明的事物，即**形象记忆**占主导。",
+                hint: "知识点：记忆内容分类"
+            },
+            {
+                type: 'MC',
+                question: "在记忆目的性方面，学前儿童记忆的发展趋势是：",
+                options: [
+                    { text: "无意记忆和有意记忆同时发展，且发展速度相同。", isCorrect: false },
+                    { text: "有意记忆逐渐减弱，无意记忆占据主导地位。", isCorrect: false },
+                    { text: "无意记忆始终是唯一的记忆形式。", isCorrect: false },
+                    { text: "无意记忆逐渐向有意记忆过渡，但无意记忆仍占优势。", isCorrect: true }
+                ],
+                rationale: "学前阶段是有意记忆萌芽和发展的时期，但总体上，没有预定目的的**无意记忆**仍是主要的记忆方式。",
+                hint: "知识点：记忆目的分类"
+            },
+            {
+                type: 'MC',
+                question: "幼儿园教师在进行早期识字教学时，引导儿童将汉字与一个夸张、生动的动作联系起来，这种教学策略的主要理论基础是利用了学前儿童的哪种记忆特点？",
+                options: [
+                    { text: "记忆提取以再现为主", isCorrect: false },
+                    { text: "短时记忆容量有限", isCorrect: false },
+                    { text: "形象记忆优势和运动记忆潜力", isCorrect: true },
+                    { text: "语义记忆开始发展", isCorrect: false }
+                ],
+                rationale: "将抽象语词与**动作（运动记忆）**和**夸张形象（形象记忆）**结合，形成双重编码，利用了学前儿童的优势进行记忆。",
+                hint: "知识点：教学策略与记忆类型"
+            },
+            {
+                type: 'MC',
+                question: "对于0-3岁的婴幼儿，他们记忆信息的主要提取方式是：",
+                options: [
+                    { text: "追忆 (Reminiscence)", isCorrect: false },
+                    { text: "再现 (Recall)", isCorrect: false },
+                    { text: "复述 (Rehearsal)", isCorrect: false },
+                    { text: "再认 (Recognition)", isCorrect: true }
+                ],
+                rationale: "**再认**是看到熟悉的物体或情境后能认出，这是0-3岁儿童记忆提取的优势方式，再现能力非常弱。",
+                hint: "知识点：0-3岁记忆提取特点"
+            },
+            {
+                type: 'MC',
+                question: "根据遗忘曲线原理和幼儿短时记忆特点，教师帮助幼儿对抗遗忘的最佳教学策略是：",
+                options: [
+                    { text: "集中复习，在活动结束前进行一次长时间的巩固。", isCorrect: false },
+                    { text: "低频率、长时间的复习，每周末进行一次回顾。", isCorrect: false },
+                    { text: "高频率、短时间的分散复习，如当天回顾、次日晨谈、周末重温。", isCorrect: true },
+                    { text: "只在幼儿即将遗忘时才提醒复习。", isCorrect: false }
+                ],
+                rationale: "**高频率、短时间的分散复习**能有效利用记忆巩固的关键时段，减缓遗忘，适应幼儿短时记忆容量有限的特点。",
+                hint: "知识点：遗忘曲线与分散复习"
+            },
+            {
+                type: 'MC',
+                question: "为促进3-6岁幼儿有意记忆的发展，教师在布置任务时，最核心的做法是：",
+                options: [
+                    { text: "减少任务难度，让幼儿轻松完成。", isCorrect: false },
+                    { text: "给予大量物质奖励，激发其记忆热情。", isCorrect: false },
+                    { text: "明确告知任务目的，并引导幼儿复述记忆目标。", isCorrect: true },
+                    { text: "让幼儿在玩耍中自然记住，不强调目的。", isCorrect: false }
+                ],
+                rationale: "有意记忆的本质是带有**预定目的**的记忆，明确目的能帮助幼儿从无意识状态转向有意识的努力。",
+                hint: "知识点：有意记忆的培养"
+            },
+            {
+                type: 'MC',
+                question: "在学前儿童的长时记忆中，哪种记忆类型是最早发展、并在幼儿早期占主导地位？",
+                options: [
+                    { text: "程序性记忆 (Procedural Memory)", isCorrect: false },
+                    { text: "语义记忆 (Semantic Memory)", isCorrect: false },
+                    { text: "情景性记忆 (Episodic Memory)", isCorrect: true },
+                    { text: "工作记忆 (Working Memory)", isCorrect: false }
+                ],
+                rationale: "**情景性记忆**是关于个体经历的、有时间地点的记忆，由于幼儿的生活以具体事件为主，故这类记忆最早、最丰富。",
+                hint: "知识点：长时记忆的类型"
+            },
+            {
+                type: 'MC',
+                question: "3-6岁幼儿的短时记忆容量逐渐增加，但仍受限制。通常这一阶段晚期的幼儿，其短时记忆容量大约能达到多少个组块（Chunk）？",
+                options: [
+                    { text: "1-2个", isCorrect: false },
+                    { text: "3-4个", isCorrect: true },
+                    { text: "7±2个", isCorrect: false },
+                    { text: "10个以上", isCorrect: false }
+                ],
+                rationale: "学前晚期（4-5岁）幼儿的短时记忆容量通常能达到**3-4个**组块，接近成人短时记忆的下限。",
+                hint: "知识点：短时记忆容量的发展"
+            },
+            {
+                type: 'MC',
+                question: "老师收起手中的图片，让幼儿说出刚才看到的三个物品，这种测试幼儿记忆的方式主要是考察他们的哪种能力？",
+                options: [
+                    { text: "记忆编码能力", isCorrect: false },
+                    { text: "记忆再认能力", isCorrect: false },
+                    { text: "记忆再现能力", isCorrect: true },
+                    { text: "感觉记忆能力", isCorrect: false }
+                ],
+                rationale: "**再现**是脱离刺激物，在头脑中重现记忆内容，是幼儿记忆发展中较晚出现的、难度更高的提取方式。",
+                hint: "知识点：再现与再认的区别"
+            },
+            // -----------------------------------------------------
+            // 10道判断题
+            // -----------------------------------------------------
+            {
+                type: 'TF',
+                question: "记忆信息三级加工模型认为，信息从短时记忆进入长时记忆，必须经过编码和巩固的过程。",
+                options: [
+                    { text: "正确", isCorrect: true },
+                    { text: "错误", isCorrect: false }
+                ],
+                rationale: "短时记忆要转化为持久的长时记忆，必须经过复述、组织等**编码**过程，实现信息的巩固。",
+                hint: "知识点：记忆信息三级加工模型"
+            },
+            {
+                type: 'TF',
+                question: "0-3岁婴幼儿的记忆以运动记忆和情绪记忆为主要形式，所以应多开展重复性的动作和提供积极的情感体验。",
+                options: [
+                    { text: "正确", isCorrect: true },
+                    { text: "错误", isCorrect: false }
+                ],
+                rationale: "这是0-3岁儿童记忆的特点。重复动作形成运动记忆，积极情绪强化记忆（情绪记忆）。",
+                hint: "知识点：0-3岁实操应用"
+            },
+            {
+                type: 'TF',
+                question: "3-6岁幼儿开始发展有意记忆，意味着无意记忆就完全消失了。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "记忆发展是**转化**和**叠加**，有意记忆的出现不代表无意记忆的消失，无意记忆在学前阶段仍占有重要地位。",
+                hint: "知识点：记忆的目的性发展"
+            },
+            {
+                type: 'TF',
+                question: "形象记忆是学前儿童记忆的优势，因此在教学中应尽量避免使用语词，防止干扰形象的储存。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "恰恰相反，教学应利用形象优势，并辅助**语词编码**，促进形象向语义的过渡（双重编码策略）。",
+                hint: "知识点：形象与语词的过渡"
+            },
+            {
+                type: 'TF',
+                question: "提高幼儿记忆再现能力的关键策略之一是：提供线索后，逐步撤销实物或图片支持。",
+                options: [
+                    { text: "正确", isCorrect: true },
+                    { text: "错误", isCorrect: false }
+                ],
+                rationale: "再现是脱离刺激物的回忆，通过逐步减少外部支持（线索），可以训练幼儿进行自主回忆。",
+                hint: "知识点：再现能力的培养"
+            },
+            {
+                type: 'TF',
+                question: "幼儿园小班（3-4岁）幼儿在识记任务中表现出的记忆策略以复述为主。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "复述和联想等策略是学前晚期（5-6岁）才开始学习和尝试应用的，小班幼儿在记忆时基本**没有有意识的策略**。",
+                hint: "知识点：记忆策略的应用"
+            },
+            {
+                type: 'TF',
+                question: "当幼儿在活动中表现出高度的兴趣和愉悦时，他们对该活动内容的记忆会更深刻、保持时间更长，这主要是情绪记忆在起作用。",
+                options: [
+                    { text: "正确", isCorrect: true },
+                    { text: "错误", isCorrect: false }
+                ],
+                rationale: "积极的情绪体验可以强化记忆痕迹，促进信息在长时记忆中的巩固，这是**情绪记忆**在编码中发挥作用。",
+                hint: "知识点：情绪与记忆的关系"
+            },
+            {
+                type: 'TF',
+                question: "由于幼儿的记忆以形象为主，因此教师在教授抽象概念时，直接给出准确的定义是最有效的教学方法。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "直接给出定义是针对语义记忆的教学，不符合幼儿**形象思维**的特点，效果不佳。",
+                hint: "知识点：形象思维的教学对策"
+            },
+            {
+                type: 'TF',
+                question: "根据遗忘曲线的规律，复习次数越多越好，复习间隔的长短对记忆效果没有明显影响。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "复习的**时间点和间隔**是影响复习效果的关键，应采用分散复习，在遗忘开始前进行高频次、短时间的复习。",
+                hint: "知识点：遗忘曲线和复习间隔"
+            },
+            {
+                type: 'TF',
+                question: "长时记忆是容量无限的永久储存库，幼儿对事件的记忆一旦进入长时记忆，就不会再发生遗忘。",
+                options: [
+                    { text: "正确", isCorrect: false },
+                    { text: "错误", isCorrect: true }
+                ],
+                rationale: "长时记忆的遗忘过程虽然缓慢，但仍会发生（如提取失败、干扰），**并非永久不忘**。",
+                hint: "知识点：长时记忆与遗忘"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let answeredState = new Array(quizData.length).fill(null); // 存储每道题的作答状态
+
+        const questionCard = document.getElementById('current-question-card');
+        const progressText = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // 渲染当前题目
+        function renderQuestion() {
+            const item = quizData[currentQuestionIndex];
+            const questionNum = currentQuestionIndex + 1;
+            const isAnswered = answeredState[currentQuestionIndex] !== null;
+
+            // 题目类型和编号
+            const questionType = questionNum <= 10 ? '单选题' : '判断题';
+            progressText.textContent = `进度: ${questionNum} / ${quizData.length}`;
+
+            // 生成选项
+            const optionsHtml = item.options.map((option, optIndex) => {
+                const optionLetter = item.type === 'MC' ? String.fromCharCode(65 + optIndex) : option.text;
+                let classes = 'option-item p-4 border-2 border-gray-200 rounded-xl transition duration-150 ease-in-out';
+                let onClickAttr = `handleAnswerClick(this, ${optIndex})`;
+
+                // 如果已作答，添加禁用、正确/错误样式
+                if (isAnswered) {
+                    onClickAttr = '';
+                    classes += ' disabled';
+                    if (option.isCorrect) {
+                        classes += ' correct border-green-500';
+                    } else if (answeredState[currentQuestionIndex] === optIndex) {
+                        classes += ' incorrect border-red-500';
+                    }
+                }
+                
+                return `
+                    <div class="${classes}" 
+                        data-index="${optIndex}" 
+                        onclick="${onClickAttr}">
+                        <span class="font-medium text-lg mr-2 text-blue-600">${optionLetter}.</span> 
+                        ${item.type === 'MC' ? option.text : ''}
+                    </div>
+                `;
+            }).join('');
+
+            // 生成反馈区域
+            const feedbackHtml = isAnswered ? `
+                <div class="feedback-area mt-6 p-4 rounded-xl shadow-md">
+                    <p class="font-bold text-lg mb-2 flex items-center text-blue-700">
+                         <i class="fa-solid fa-lightbulb text-blue-500 mr-2"></i>【知识点解析】
+                    </p>
+                    <p class="rationale text-gray-700">${item.rationale}</p>
+                    <p class="mt-2 text-sm italic text-gray-500">提示: ${item.hint}</p>
+                </div>
+            ` : '';
+
+
+            // 渲染到DOM
+            questionCard.innerHTML = `
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-start">
+                    <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm mr-4 mt-1">${questionType}</span>
+                    ${item.question}
+                </h3>
+                <div class="options-group space-y-4" id="options-${questionNum}">
+                    ${optionsHtml}
+                </div>
+                ${feedbackHtml}
+            `;
+            
+            updateNavigationButtons(isAnswered);
+        }
+
+        // 处理用户点击答案
+        function handleAnswerClick(selectedElement, selectedIndex) {
+            const item = quizData[currentQuestionIndex];
+            const isCorrect = item.options[selectedIndex].isCorrect;
+            
+            // 1. 记录作答状态
+            answeredState[currentQuestionIndex] = selectedIndex;
+
+            // 2. 重新渲染题目以显示反馈
+            renderQuestion();
+        }
+
+        // 更新导航按钮状态
+        function updateNavigationButtons(isAnswered) {
+            // 上一题按钮
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            // 下一题按钮（如果全部完成，则显示“完成”）
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtn.textContent = '完成测验';
+                nextBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                nextBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+            } else {
+                nextBtn.textContent = '下一题';
+                nextBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                nextBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            }
+        }
+        
+        // 导航事件监听
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else if (currentQuestionIndex === quizData.length - 1) {
+                // 处理完成测验逻辑 (可选: 统计分数或跳转)
+                alert("测验已完成！请回顾所有题目和解析。");
+            }
+        });
+
+        // 初始化
+        window.onload = renderQuestion;
+    </script>
+</body>
+</html>
