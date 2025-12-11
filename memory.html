@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学前儿童记忆的发展：90分钟理论与实操深度融合版</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f0f4f8;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        /* 导航点样式 */
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #cbd5e1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            background-color: #3b82f6;
+            transform: scale(1.2);
+        }
+
+        /* 幻灯片容器 */
+        .slide-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            scroll-behavior: smooth;
+        }
+        .slide {
+            scroll-snap-align: start;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* 0-3岁 动态演示：弹跳球动画 (模拟运动记忆) */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 2s infinite;
+        }
+
+        /* 0-3岁 动态演示：客体永久性 (Peek-a-boo) */
+        .peek-box {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .peek-box:hover .peek-cover, .peek-box.active .peek-cover {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        .peek-cover {
+            transition: all 0.5s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #60a5fa;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* 3-6岁 动态演示：翻牌卡片 (Flip Card) */
+        .flip-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .flip-card-front {
+            background-color: #fff;
+            border: 2px solid #e2e8f0;
+        }
+        .flip-card-back {
+            background-color: #fef3c7; /* Amber 100 */
+            color: #d97706;
+            transform: rotateY(180deg);
+            border: 2px solid #fbbf24;
+        }
+
+        /* 自定义表格样式 */
+        .custom-table th {
+            background-color: #eff6ff;
+            color: #1e40af;
+            font-weight: 600;
+        }
+        .custom-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .custom-table tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* 考核环节的答案提示 */
+        .quiz-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5; /* Green 100 */
+            border-color: #10b981; /* Green 500 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* Red 100 */
+            border-color: #ef4444; /* Red 500 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 侧边导航 -->
+    <div class="fixed right-5 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-50">
+        <div class="nav-dot active" onclick="scrollToSlide(0)" title="封面"></div>
+        <div class="nav-dot" onclick="scrollToSlide(1)" title="理论基础"></div>
+        <div class="nav-dot" onclick="scrollToSlide(2)" title="0-3岁实操"></div>
+        <div class="nav-dot" onclick="scrollToSlide(3)" title="3-6岁实操"></div>
+        <div class="nav-dot" onclick="scrollToSlide(4)" title="教学策略"></div>
+        <div class="nav-dot" onclick="scrollToSlide(5)" title="总结考核"></div>
+    </div>
+
+    <div class="slide-container" id="scroller">
+
+        <!-- Slide 1: 封面与授课安排 (5分钟) -->
+        <section class="slide bg-white">
+            <div class="max-w-4xl w-full text-center space-y-8 animate-fade-in-up">
+                <div class="inline-block p-4 rounded-full bg-blue-100 mb-4 animate-bounce-slow">
+                    <i class="fa-solid fa-brain text-6xl text-blue-600"></i>
+                </div>
+                <h1 class="text-5xl font-bold text-slate-800">学前儿童记忆的发展与教学应用</h1>
+                <h2 class="text-2xl text-blue-500 font-medium tracking-wide">90分钟：深度理论融合与分龄实操训练</h2>
+                
+                <div class="mt-12 p-6 bg-slate-50 rounded-xl border border-slate-200 inline-block text-base text-slate-600 w-3/4">
+                    <p class="font-bold text-lg mb-3 text-slate-700">90分钟课程安排</p>
+                    <div class="flex justify-between font-medium">
+                        <span class="text-red-500">I. 理论框架：20 mins</span>
+                        <span class="text-green-500">II. 分龄实操：45 mins</span>
+                        <span class="text-blue-500">III. 策略应用与考核：25 mins</span>
+                    </div>
+                </div>
+                
+                <p class="mt-8 text-xl text-slate-500 italic">“让我们从教材基础概念出发，走进孩子们生动活泼的记忆世界！”</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: 知识图谱与理论基础 (20分钟) *融入基础概念* -->
+        <section class="slide bg-slate-50">
+            <div class="max-w-6xl w-full">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8 border-l-8 border-blue-500 pl-4">第一部分：记忆的结构、分类与发展规律 (20分钟)</h2>
+                
+                <div class="grid grid-cols-2 gap-8 w-full">
+                    
+                    <!-- 左侧：基础结构 -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500">
+                        <h3 class="text-2xl font-bold text-red-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> 核心概念：记忆信息三级加工模型</h3>
+                        <div class="space-y-4 text-slate-700">
+                            <div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-300">
+                                <p class="font-bold">1. 感觉记忆 (Sensory Memory)</p>
+                                <p class="text-sm">容量大，保持时间极短 (秒级)。幼儿对**色彩、声音**的敏感度高。</p>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-300">
+                                <p class="font-bold">2. 短时/工作记忆 (STM/WM)</p>
+                                <p class="text-sm">容量小，保持时间短 (数十秒)。幼儿短时记忆容量**小**，限制了复杂学习。</p>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-300">
+                                <p class="font-bold">3. 长时记忆 (LTM)</p>
+                                <p class="text-sm">容量无限，保持时间长。幼儿早期LTM主要为**情景性记忆**。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：分类与发展特点 -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
+                        <h3 class="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> 幼儿记忆的两大分类视角</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- 按内容分类 -->
+                            <div>
+                                <h4 class="font-bold text-lg mb-2 text-blue-600">按内容分类 (发展顺序)</h4>
+                                <ul class="list-disc pl-5 text-sm space-y-1">
+                                    <li>运动记忆 (最早)</li>
+                                    <li>情绪记忆</li>
+                                    <li><span class="font-bold text-red-500">形象记忆 (学前主导)</span></li>
+                                    <li>语义记忆 (最晚发展)</li>
+                                </ul>
+                            </div>
+                            <!-- 按目的分类 -->
+                            <div>
+                                <h4 class="font-bold text-lg mb-2 text-orange-600">按目的分类 (发展趋势)</h4>
+                                <ul class="list-disc pl-5 text-sm space-y-1">
+                                    <li>无意记忆 (Intentional)
+                                        <p class="text-xs text-slate-400">特点：无预定目的，学前**占优势**</p>
+                                    </li>
+                                    <li>有意记忆 (Unintentional)
+                                        <p class="text-xs text-slate-400">特点：有目的、需努力，学前**开始发展**</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-3 bg-yellow-50 rounded-lg">
+                            <h4 class="font-bold text-lg mb-1 text-yellow-700">发展关键：提取方式的进步</h4>
+                            <p class="text-sm">幼儿记忆提取从**再认 (Recognition)**为主，逐渐发展到**再现 (Recall)**能力的提高。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: 0-3岁视角：动作与情绪的记忆 (25分钟) -->
+        <section class="slide bg-blue-50">
+            <div class="max-w-6xl w-full">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8 border-l-8 border-yellow-400 pl-4">第二部分：0-3岁婴幼儿的记忆特点与实操 (25分钟)</h2>
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    
+                    <!-- 左侧：理论与材料 -->
+                    <div class="w-full md:w-1/3 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-yellow-400">
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3">0-3岁：感知运动与再认</h3>
+                            <p class="text-slate-600 font-bold text-blue-600 mb-2">主要特点：**无意性**、**动作性**、**情绪性**</p>
+                            <ul class="list-disc pl-5 text-sm text-slate-600">
+                                <li>记忆过程：信息直接从感觉记忆进入短时记忆。</li>
+                                <li>记忆提取：**再认**远强于再现，看到实物才能想起。</li>
+                            </ul>
+                        </div>
+
+                        <!-- 适宜材料表格 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <h4 class="font-bold text-slate-700 mb-4 border-b pb-2">【实操素材】0-3岁适宜记忆内容</h4>
+                            <table class="w-full text-sm custom-table">
+                                <tbody>
+                                    <tr><td class="p-2 border-b font-bold">形象素材</td><td class="p-2 border-b">高对比度卡片、人脸、大型几何图形</td></tr>
+                                    <tr><td class="p-2 font-bold">动作素材</td><td class="p-2">重复的律动、摇铃游戏、躲猫猫</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：动态模拟区 -->
+                    <div class="w-full md:w-2/3 bg-white rounded-3xl shadow-2xl p-8 relative overflow-hidden border-4 border-blue-200">
+                        <div class="absolute top-0 right-0 bg-yellow-400 text-white px-4 py-1 rounded-bl-xl font-bold">动态互动：动作与情绪记忆</div>
+                        
+                        <h3 class="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-face-laugh-beam text-red-500 animate-pulse"></i> 
+                            演示1：客体永久性与情绪记忆 (Peek-a-boo)
+                            <span class="text-sm font-normal text-slate-400 ml-2">(点击或悬停方块，体验再认的愉悦)</span>
+                        </h3>
+
+                        <div class="flex justify-around items-center h-48">
+                            <!-- 演示1: 躲猫猫 -->
+                            <div class="relative w-40 h-40 mx-auto peek-box group" onclick="this.classList.toggle('active')">
+                                <!-- 遮挡层 -->
+                                <div class="peek-cover shadow-xl cursor-pointer">
+                                    <i class="fa-solid fa-hand text-4xl mb-2"></i>
+                                    <p>请记住我藏起来啦!</p>
+                                </div>
+                                <!-- 隐藏物体 (幼儿喜爱的形象) -->
+                                <div class="w-full h-full bg-red-100 rounded-xl flex items-center justify-center border-4 border-red-500">
+                                    <i class="fa-solid fa-face-grin-stars text-7xl text-red-500 animate-bounce"></i>
+                                </div>
+                            </div>
+
+                            <!-- 演示2: 运动记忆强化 -->
+                            <div class="w-40 h-40 bg-slate-100 p-6 rounded-xl border border-slate-200 text-center relative overflow-hidden">
+                                <p class="text-sm text-slate-500 mb-4">重复的动作即记忆！</p>
+                                <div class="h-20 w-full flex items-center justify-center">
+                                    <div class="w-10 h-10 bg-green-500 rounded-full shadow-lg animate-bounce-slow flex items-center justify-center text-white">
+                                        <i class="fa-solid fa-cube"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-sm text-slate-500 text-center italic">【互动提示】引导学员讨论：在0-3岁组，游戏过程中的**愉悦感（情绪记忆）**是强化记忆的主要手段。(5分钟)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: 3-6岁视角：形象向语词过渡 (20分钟) -->
+        <section class="slide bg-indigo-50">
+            <div class="max-w-6xl w-full">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8 border-l-8 border-purple-400 pl-4">第三部分：3-6岁幼儿的记忆发展与实操 (20分钟)</h2>
+                <div class="flex flex-col md:flex-row-reverse gap-8 items-start">
+                    
+                    <!-- 右侧：理论与材料 -->
+                    <div class="w-full md:w-1/3 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-indigo-500">
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3">3-6岁：形象主导与再现发展</h3>
+                            <p class="text-slate-600 font-bold text-indigo-600 mb-2">发展趋势：**有意**记忆发展，**再现**能力提高</p>
+                            <ul class="list-disc pl-5 text-sm text-slate-600">
+                                <li>记忆策略：开始学习**复述**、**联想**等初级策略。</li>
+                                <li>短时记忆容量：逐渐接近成人（4-5个组块）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- 适宜材料表格 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <h4 class="font-bold text-slate-700 mb-4 border-b pb-2">【实操素材】3-6岁适宜记忆内容</h4>
+                            <table class="w-full text-sm custom-table">
+                                <tbody>
+                                    <tr><td class="p-2 border-b font-bold">形象素材</td><td class="p-2 border-b">情节生动的绘本、复杂色彩图画、角色扮演道具</td></tr>
+                                    <tr><td class="p-2 font-bold">语词素材</td><td class="p-2">押韵儿歌、顺口溜、情景对话</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 左侧：动态模拟区 -->
+                    <div class="w-full md:w-2/3 bg-white rounded-3xl shadow-2xl p-8 relative border-4 border-indigo-200">
+                        <div class="absolute top-0 left-0 bg-indigo-500 text-white px-4 py-1 rounded-br-xl font-bold">动态互动：形象与语词结合</div>
+                        
+                        <h3 class="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2 justify-end">
+                            演示2：形象向语义过渡策略 (点击翻牌)
+                            <i class="fa-solid fa-images text-indigo-500"></i> 
+                        </h3>
+
+                        <div class="flex flex-col gap-6">
+                            <div class="text-center text-base text-slate-500">
+                                <p>点击卡片，体验形象（幼儿优势）与语词（辅助发展）的**双重编码策略**。</p>
+                            </div>
+
+                            <div class="flex justify-center gap-6 h-48">
+                                <!-- Card 1 -->
+                                <div class="flip-card w-32 h-44" onclick="this.classList.toggle('flipped')">
+                                    <div class="flip-card-inner">
+                                        <div class="flip-card-front">
+                                            <i class="fa-solid fa-plane text-5xl text-blue-500 mb-2"></i>
+                                            <p class="text-slate-400 text-xs">具体形象：飞机</p>
+                                        </div>
+                                        <div class="flip-card-back">
+                                            <p class="text-2xl font-bold">飞</p>
+                                            <p class="text-sm mt-2 opacity-70">抽象概念</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2 -->
+                                <div class="flip-card w-32 h-44" onclick="this.classList.toggle('flipped')">
+                                    <div class="flip-card-inner">
+                                        <div class="flip-card-front">
+                                            <i class="fa-solid fa-tree text-5xl text-green-500 mb-2"></i>
+                                            <p class="text-slate-400 text-xs">具体形象：大树</p>
+                                        </div>
+                                        <div class="flip-card-back">
+                                            <p class="text-2xl font-bold">大</p>
+                                            <p class="text-sm mt-2 opacity-70">抽象概念</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3 -->
+                                <div class="flip-card w-32 h-44" onclick="this.classList.toggle('flipped')">
+                                    <div class="flip-card-inner">
+                                        <div class="flip-card-front">
+                                            <i class="fa-solid fa-sun text-5xl text-yellow-500 mb-2"></i>
+                                            <p class="text-slate-400 text-xs">具体形象：太阳</p>
+                                        </div>
+                                        <div class="flip-card-back">
+                                            <p class="text-2xl font-bold">热</p>
+                                            <p class="text-sm mt-2 opacity-70">抽象概念</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: 教学策略矩阵 (15分钟) -->
+        <section class="slide bg-white">
+            <div class="max-w-6xl w-full">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8 border-l-8 border-orange-500 pl-4">第四部分：教学策略与记忆规律应用 (15分钟)</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-white">
+                                <th class="p-4 w-1/4">记忆规律 (理论)</th>
+                                <th class="p-4 w-1/4">幼儿表现 (现象)</th>
+                                <th class="p-4 w-1/4">教学对策 (实操)</th>
+                                <th class="p-4 w-1/4">适宜活动示例</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b hover:bg-slate-50">
+                                <td class="p-4 font-bold text-blue-600">
+                                    <i class="fa-solid fa-clock-rotate-left mr-2"></i>遗忘曲线（短时记忆瓶颈）
+                                </td>
+                                <td class="p-4">新学的儿歌第二天就忘了一半。</td>
+                                <td class="p-4">
+                                    <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold mr-1">关键</span>
+                                    分散复习；高频次、短时间回顾。
+                                </td>
+                                <td class="p-4 text-sm">“三步复习法”：当天回顾、次日晨谈、周末重温。</td>
+                            </tr>
+                            <tr class="border-b hover:bg-slate-50">
+                                <td class="p-4 font-bold text-green-600">
+                                    <i class="fa-solid fa-arrow-right-long mr-2"></i>再认向再现发展
+                                </td>
+                                <td class="p-4">看到卡片能说出名字，但看不到就说不出来。</td>
+                                <td class="p-4">
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold mr-1">策略</span>
+                                    提供线索（如提问），逐步撤销实物支持。
+                                </td>
+                                <td class="p-4 text-sm">先出示图片，后收起图片，通过“故事复述”提升再现能力。</td>
+                            </tr>
+                            <tr class="border-b hover:bg-slate-50">
+                                <td class="p-4 font-bold text-indigo-600">
+                                    <i class="fa-solid fa-user-check mr-2"></i>有意记忆萌芽
+                                </td>
+                                <td class="p-4">完成任务缺乏自我监控能力，容易分心。</td>
+                                <td class="p-4">
+                                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold mr-1">核心</span>
+                                    明确任务目的；引导幼儿复述记忆目的。
+                                </td>
+                                <td class="p-4 text-sm">在布置任务前，先问：“我们今天要记住什么？”</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-orange-600">
+                                    <i class="fa-solid fa-hand-holding-box mr-2"></i>形象联结（LTM编码）
+                                </td>
+                                <td class="p-4">抽象概念记忆困难。</td>
+                                <td class="p-4">
+                                    <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold mr-1">技巧</span>
+                                    将语词与夸张的动作或情绪联结，形成编码优势。
+                                </td>
+                                <td class="p-4 text-sm">学习“大”时，张开双臂做夸张动作。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-6 text-xl text-slate-500 text-center italic">【学员讨论】如何引导4岁幼儿从“无意记忆”转向“有意记忆”？(5分钟)</p>
+            </div>
+        </section>
+        
+        <!-- Slide 6: 总结与互动考核 (10分钟) -->
+        <section class="slide bg-pink-50">
+            <div class="max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8 border-l-8 border-pink-500 pl-4">第五部分：总结与互动考核 (10分钟)</h2>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-xl border-4 border-pink-300">
+                    <h3 class="text-2xl font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-pink-500"></i>
+                        互动案例判断：幼儿记忆策略应用
+                    </h3>
+                    <p class="text-lg text-slate-600 mb-6">【案例】小班李老师让孩子们把玩具收好，并说：“我们要把小汽车放进蓝色箱子，把积木放进黄色箱子。”</p>
+
+                    <p class="font-bold text-xl text-slate-800 mb-4">请判断：李老师的指令最主要利用了哪种记忆特点？</p>
+
+                    <div id="quiz-options" class="space-y-3">
+                        <div class="quiz-option p-4 border-2 rounded-lg bg-slate-50 hover:bg-slate-100" data-answer="1" onclick="checkAnswer(this, 2)">
+                            <span class="font-medium text-pink-600 mr-2">A.</span> 利用语词记忆，促进抽象概念发展。
+                        </div>
+                        <div class="quiz-option p-4 border-2 rounded-lg bg-slate-50 hover:bg-slate-100" data-answer="2" onclick="checkAnswer(this, 2)">
+                            <span class="font-medium text-pink-600 mr-2">B.</span> 运用形象记忆，通过颜色和物体联结。
+                        </div>
+                        <div class="quiz-option p-4 border-2 rounded-lg bg-slate-50 hover:bg-slate-100" data-answer="3" onclick="checkAnswer(this, 2)">
+                            <span class="font-medium text-pink-600 mr-2">C.</span> 采用分散复习策略，克服遗忘曲线。
+                        </div>
+                    </div>
+
+                    <div id="quiz-feedback" class="mt-6 p-4 rounded-lg text-center font-bold hidden"></div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <h3 class="text-2xl font-bold text-slate-700">感谢您的参与！</h3>
+                    <p class="text-lg text-slate-500">期待在未来的教学中，看到更多利用幼儿记忆特点的精彩实践！</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // 平滑滚动脚本
+        function scrollToSlide(index) {
+            const container = document.getElementById('scroller');
+            const slides = container.getElementsByClassName('slide');
+            if(slides[index]) {
+                slides[index].scrollIntoView({ behavior: 'smooth' });
+            }
+            updateActiveDot(index);
+        }
+
+        // 监听滚动更新导航点
+        const container = document.getElementById('scroller');
+        const dots = document.querySelectorAll('.nav-dot');
+        
+        container.addEventListener('scroll', () => {
+            const index = Math.round(container.scrollTop / window.innerHeight);
+            updateActiveDot(index);
+        });
+
+        function updateActiveDot(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            if(dots[index]) dots[index].classList.add('active');
+        }
+
+        // 互动考核脚本
+        const CORRECT_ANSWER_INDEX = 2; // B 选项
+        const feedbackDiv = document.getElementById('quiz-feedback');
+        let quizCompleted = false;
+
+        function checkAnswer(selectedElement, correctAnswerIndex) {
+            if (quizCompleted) return;
+
+            const selectedAnswer = parseInt(selectedElement.getAttribute('data-answer'));
+            const allOptions = document.querySelectorAll('.quiz-option');
+            
+            // 标记正确答案
+            const correctElement = allOptions[correctAnswerIndex - 1];
+            correctElement.classList.add('correct');
+            correctElement.classList.remove('bg-slate-50');
+
+            if (selectedAnswer === correctAnswerIndex) {
+                // 答对
+                feedbackDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                feedbackDiv.classList.add('bg-green-100', 'text-green-700');
+                feedbackDiv.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>恭喜您，回答正确！小班幼儿以形象记忆为主，李老师巧妙利用了**玩具**和**箱子颜色**这两个具体形象进行编码。';
+            } else {
+                // 答错
+                selectedElement.classList.add('incorrect');
+                selectedElement.classList.remove('bg-slate-50', 'hover:bg-slate-100');
+                feedbackDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                feedbackDiv.classList.add('bg-red-100', 'text-red-700');
+                feedbackDiv.innerHTML = '<i class="fa-solid fa-circle-xmark mr-2"></i>很遗憾，请再思考一下。小班幼儿的语词记忆和抽象思维还不成熟，应优先使用形象联结！正确答案是 B。';
+            }
+
+            quizCompleted = true;
+            // 禁用其他选项的点击
+            allOptions.forEach(option => option.onclick = null);
+        }
+
+        // 修正 Peek-a-boo 交互，使其能像按钮一样工作
+        document.querySelectorAll('.peek-box').forEach(box => {
+            box.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            box.addEventListener('mouseenter', function() {
+                this.classList.add('active');
+            });
+            box.addEventListener('mouseleave', function() {
+                this.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
