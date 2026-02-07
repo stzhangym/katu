@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古诗词互动手册 - AI 意境增强版 (全20首)</title>
+    <title>古诗词互动手册 - 趣解唐宋版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,20 +11,18 @@
         body { background-color: #020617; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif SC', serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-        .element { position: absolute; z-index: 25; animation: fall linear infinite; pointer-events: none; }
-        .pinyin { font-size: 0.55em; line-height: 1.2; margin-bottom: 4px; color: #a5b4fc; letter-spacing: 0.05em; font-weight: 500; }
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         
-        .shimmer {
-            background: linear-gradient(90deg, #0f172a 25%, #1e293b 50%, #0f172a 75%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .img-fade { animation: fadeIn 2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.5; } }
+        
+        .poem-image-container::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 100px 50px rgba(2, 6, 23, 0.8);
+            pointer-events: none;
         }
     </style>
 </head>
@@ -35,322 +33,128 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
-        const { useState, useEffect, useCallback } = React;
+        const { useState, useEffect } = React;
 
         const POEMS_DATA = [
             {
-                title: "四时田园杂兴",
-                author: "范成大",
-                dynasty: "宋",
-                authorBio: "范老师退休后回苏州老家开启了“养老博主”模式，一口气写了60首田园诗。他观察细致入微，是宋代田园诗的集大成者。",
+                title: "四时田园杂兴", author: "范成大", dynasty: "宋",
+                authorBio: "范老师退休后回苏州老家开启了“顶级养老博主”模式。他不跳广场舞也不钓鱼，专门观察农民伯伯怎么干活，顺便把田园风光拍成了短视频（诗歌版）。",
                 content: [
-                    { text: "昼出耘田夜绩麻，", pinyin: "zhòu chū yún tián yè jì má", notes: "【耘田】除去田间杂草。【绩麻】把麻搓成线。" },
-                    { text: "村庄儿女各当家。", pinyin: "cūn zhuāng ér nǚ gè dāng jiā", notes: "【各当家】各自担任起家庭的一份劳动。" },
-                    { text: "童孙未解供耕织，", pinyin: "tóng sūn wèi jiě gòng gēng zhī", notes: "【未解】不懂得。【供】从事。" },
-                    { text: "也傍桑阴学种瓜。", pinyin: "yě bàng sāng yīn xué zhòng guā", notes: "【傍】靠近。【桑阴】桑树的树荫。" }
+                    { text: "昼出耘田夜绩麻，", pinyin: "zhòu chū yún tián yè jì má", notes: "【耘田】除草。【绩麻】搓麻线。" },
+                    { text: "村庄儿女各当家。", pinyin: "cūn zhuāng ér nǚ gè dāng jiā", notes: "各自承担劳动。" },
+                    { text: "童孙未解供耕织，", pinyin: "tóng sūn wèi jě gòng gēng zhī", notes: "小孩不懂耕种。" },
+                    { text: "也傍桑阴学种瓜。", pinyin: "yě bàng sāng yīn xué zhòng guā", notes: "学大人种瓜。" }
                 ],
-                translation: "白天去田里除草，晚上回家搓麻线，村里的青年男女都各自忙着家里的活计。小孩子虽然不懂得耕种织布，也学着大人的样子，在桑树阴下学着种瓜。",
-                effect: "leaves",
-                imagePrompt: "Traditional Chinese ink painting, rural village, people farming and weaving, children under mulberry trees, serene summer atmosphere."
+                translation: "白天除草晚上搓麻，村里男女各忙各。小孩不懂耕织，却在桑阴下学种瓜。",
+                imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "稚子弄冰",
-                author: "杨万里",
-                dynasty: "宋",
-                authorBio: "杨万里提倡“诚斋体”，强调真实自然。他是那种能陪孙子玩一下午冰块的有趣老头。",
+                title: "稚子弄冰", author: "杨万里", dynasty: "宋",
+                authorBio: "杨万里是“诚斋体”的创始人，简单说就是爱写生活中的“沙雕瞬间”。这首诗记录了他家娃在清晨玩冰块，结果砸碎了的一场‘翻车现场’。",
                 content: [
-                    { text: "稚子金盆脱晓冰，", pinyin: "zhì zǐ jīn pén tuō xiǎo bīng", notes: "【稚子】幼小的孩子。【脱晓冰】指清晨从盆中取出冻好的冰块。" },
-                    { text: "彩丝穿取当银钲。", pinyin: "cǎi sī chuān qǔ dāng yín zhēng", notes: "【钲】古代一种金属乐器。" },
-                    { text: "敲成玉磬穿林响，", pinyin: "qiāo chéng yù qìng chuān lín xiǎng", notes: "【磬】古代打击乐器，多用玉或石制成。" },
-                    { text: "忽作玻璃碎地声。", pinyin: "hū zuò bō lí suì dì shēng", notes: "【玻璃】指天然水晶之类的透明物质。" }
+                    { text: "稚子金盆脱晓冰，", pinyin: "zhì zǐ jīn pén tuō xiǎo bīng", notes: "清晨取冰。" },
+                    { text: "彩丝穿取当银钲。", pinyin: "cǎi sī chuān qǔ dāng yín zhēng", notes: "钲：金属乐器。" },
+                    { text: "敲成玉磬穿林响，", pinyin: "qiāo chéng yù qìng chuān lín xiǎng", notes: "声音清脆。" },
+                    { text: "忽作玻璃碎地声。", pinyin: "hū zuò bō lí suì dì shēng", notes: "冰碎的声音。" }
                 ],
-                translation: "清晨，小孩子从盆里取出冻好的冰块，用彩线穿起来当乐器敲击。清脆的声音穿过树林，忽然冰块落地，发出像玻璃破碎的声音。",
-                effect: "snow",
-                imagePrompt: "Chinese wash painting, a child playing with a translucent ice block on a colorful string, winter morning mist, soft tones."
+                translation: "清晨小孩取冰穿线当乐器敲，声音清脆，忽然冰碎落地如玻璃声。",
+                imageUrl: "https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "村晚",
-                author: "雷震",
-                dynasty: "宋",
-                authorBio: "凭借这首极具画面感的《村晚》，雷震在群星闪耀的宋代诗坛中稳占一席之地。",
+                title: "村晚", author: "雷震", dynasty: "宋",
+                authorBio: "雷震这名字听着挺硬核，其实心肠最软。他画了一幅“牧童放羊”的插画，没有一句说苦，全是孩子翘着二郎腿吹短笛的潇洒状态。",
                 content: [
-                    { text: "草满池塘水满陂，", pinyin: "cǎo mǎn chí táng shuǐ mǎn bēi", notes: "【陂】池岸，水畔。" },
-                    { text: "山衔落日浸寒漪。", pinyin: "shān xián luò rì jìn hán yī", notes: "【衔】含着。【漪】水面的波纹。" },
-                    { text: "牧童归去横牛背，", pinyin: "mù tóng guī qù héng niú bèi", notes: "【横牛背】横坐在牛背上。" },
-                    { text: "短笛无腔信口吹。", pinyin: "duǎn dí wú qiāng xìn kǒu chuī", notes: "【腔】曲调。【信口】随口。" }
+                    { text: "草满池塘水满陂，", pinyin: "cǎo mǎn chí táng shuǐ mǎn bēi", notes: "陂：池岸。" },
+                    { text: "山衔落日浸寒漪。", pinyin: "shān xián luò rì jìn hán yī", notes: "夕阳倒影。" },
+                    { text: "牧童归去横牛背，", pinyin: "mù tóng guī qù héng niú bèi", notes: "横坐牛背。" },
+                    { text: "短笛无腔信口吹。", pinyin: "duǎn dí wú qiāng xìn kǒu chuī", notes: "信口：随口。" }
                 ],
-                translation: "池塘长满绿草，水涨满堤岸。夕阳衔在山头，映在清凉波纹中。牧童横坐牛背回家，随口吹着短笛。",
-                effect: "mist",
-                imagePrompt: "Chinese landscape, sunset over a pond, reflection in water, shepherd boy on a buffalo playing flute, ethereal evening."
+                translation: "池塘草绿水满。夕阳衔山，牧童横坐牛背随口吹笛回家。",
+                imageUrl: "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "游子吟",
-                author: "孟郊",
-                dynasty: "唐",
-                authorBio: "这首诗是孟郊任职溧阳时，将老母亲接来供养时所写，字字含泪。",
+                title: "游子吟", author: "孟郊", dynasty: "唐",
+                authorBio: "孟郊是著名的“苦逼派”诗人，考试考了一辈子，50岁才转正。但这首诗是他最温柔的一刻，因为他知道，世界上唯一的避风港是老妈熬夜缝的那件大衣。",
                 content: [
-                    { text: "慈母手中线，", pinyin: "cí mǔ shǒu zhōng xiàn", notes: "【慈母】慈爱的母亲。" },
-                    { text: "游子身上衣。", pinyin: "yóu zǐ shēn shàng yī", notes: "【游子】离家在外的人。" },
-                    { text: "临行密密缝，", pinyin: "lín xíng mì mì féng", notes: "【密密缝】缝得细密牢固。" },
-                    { text: "意恐迟迟归。", pinyin: "yì kǒng chí chí guī", notes: "【意恐】担心。" },
-                    { text: "谁言寸草心，", pinyin: "shuí yán cùn cǎo xīn", notes: "【寸草心】喻子女微小的心意。" },
-                    { text: "报得三春晖。", pinyin: "bào dé sān chūn huī", notes: "【三春晖】喻母亲博大的爱。" }
+                    { text: "慈母手中线，", pinyin: "cí mǔ shǒu zhōng xiàn", notes: "母亲缝衣。" },
+                    { text: "游子身上衣。", pinyin: "yóu zǐ shēn shàng yī", notes: "离家之子。" },
+                    { text: "临行密密缝，", pinyin: "lín xíng mì mì féng", notes: "怕儿子迟归。" },
+                    { text: "意恐迟迟归。", pinyin: "yì kǒng chí chí guī", notes: "担心。" }
                 ],
-                translation: "慈母缝制游子衣裳。临行前缝得密密实实，怕儿子迟归。子女微薄的心意，怎能报答春天阳光般的母爱？",
-                effect: "spark",
-                imagePrompt: "Ink wash painting, mother sewing by candlelight, warm light, ancient house, emotional mother-son bond style."
+                translation: "慈母缝衣，临行前缝得细密，报答不尽母亲如春晖般的爱。",
+                imageUrl: "https://images.unsplash.com/photo-1533613220915-609f661a6fe1?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "鸟鸣涧",
-                author: "王维",
-                dynasty: "唐",
-                authorBio: "王维晚年隐居，心境平和，诗中充满了禅意，被誉为“诗中有画”。",
+                title: "鸟鸣涧", author: "王维", dynasty: "唐",
+                authorBio: "王维，大唐顶级流量兼首席设计师。他在山里买了个大别墅（辋川别业），每天就在山里发呆、画画、听鸟叫，妥妥的“佛系大佬”生活范本。",
                 content: [
-                    { text: "人闲桂花落，", pinyin: "rén xián guì huā luò", notes: "【人闲】心境静谧。" },
-                    { text: "夜静春山空。", pinyin: "yè jìng chūn shān kōng", notes: "【空】空旷宁静。" },
-                    { text: "月出惊山鸟，", pinyin: "yuè chū jīng shān niǎo", notes: "【惊】惊动。因月色皎洁惊起了鸟。" },
-                    { text: "时鸣春涧中。", pinyin: "shí míng chūn jiàn zhōng", notes: "【时鸣】不时鸣叫。" }
+                    { text: "人闲桂花落，", pinyin: "rén xián guì huā luò", notes: "心静察花落。" },
+                    { text: "夜静春山空。", pinyin: "yè jìng chūn shān kōng", notes: "空：宁静。" },
+                    { text: "月出惊山鸟，", pinyin: "yuè chū jīng shān niǎo", notes: "月光惊鸟。" },
+                    { text: "时鸣春涧中。", pinyin: "shí míng chūn jiàn zhōng", notes: "不时啼鸣。" }
                 ],
-                translation: "心静察觉桂花飘落，春山寂静空灵。月亮出来惊动山鸟，在春涧中发出阵阵啼鸣。",
-                effect: "mist",
-                imagePrompt: "Zen style ink painting, bright moon in spring mountains, falling flowers, birds flying in moonlight."
+                translation: "人静察觉花落，山夜空灵。月出惊起山鸟，在溪涧间啼鸣。",
+                imageUrl: "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "从军行",
-                author: "王昌龄",
-                dynasty: "唐",
-                authorBio: "王昌龄是边塞诗的“七绝圣手”。一句“不破楼兰终不还”道尽了大唐男儿的热血。",
+                title: "从军行", author: "王昌龄", dynasty: "唐",
+                authorBio: "老王是边塞诗里的带头大哥。别看大唐繁华，边境可是玩命的地方。老王用这首诗告诉所有人：没点热血，在大唐是混不下去的！",
                 content: [
-                    { text: "青海长云暗雪山，", pinyin: "qīng hǎi cháng yún àn xuě shān", notes: "【暗】使暗淡。" },
-                    { text: "孤城遥望玉门关。", pinyin: "gū chéng yáo wàng yù mén guān", notes: "【孤城】边防要塞。" },
-                    { text: "黄沙百战穿金甲，", pinyin: "huáng shā bǎi zhàn chuān jīn jiǎ", notes: "【穿】磨破。" },
-                    { text: "不破楼兰终不还。", pinyin: "bù pò lóu lán zhōng bù hái", notes: "【楼兰】此处借指敌军。" }
+                    { text: "青海长云暗雪山，", pinyin: "qīng hǎi cháng yún àn xuě shān", notes: "云遮雪山。" },
+                    { text: "孤城遥望玉门关。", pinyin: "gū chéng yáo wàng yù mén guān", notes: "遥望要塞。" },
+                    { text: "黄沙百战穿金甲，", pinyin: "huáng shā bǎi zhàn chuān jīn jiǎ", notes: "金甲磨破。" },
+                    { text: "不破楼兰终不还。", pinyin: "bù pò lóu lán zhōng bù hái", notes: "誓不罢休。" }
                 ],
-                translation: "青海湖长云遮蔽雪山，遥望孤城外的玉门关。黄沙中身经百战磨穿金甲，不打败敌人誓不回还！",
-                effect: "sand",
-                imagePrompt: "Vast desert landscape, snow mountains, ancient fort, soldiers in armor, golden sunset sandstorm, epic style."
+                translation: "长云遮蔽雪山，遥望玉门关。百战穿透金甲，不胜敌军誓不还。",
+                imageUrl: "https://images.unsplash.com/photo-1469066630291-171f23b6d1e5?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "秋夜将晓出篱门迎凉有感",
-                author: "陆游",
-                dynasty: "宋",
-                authorBio: "陆游68岁时感叹北方沦陷，忧愤之情溢于言表。",
+                title: "秋夜将晓出篱门迎凉有感", author: "陆游", dynasty: "宋",
+                authorBio: "陆游是南宋最大的愤青（褒义）。他一辈子都想把北方失地收回来，临老了还在家里熬夜写诗：“喂，南边那帮打仗的哥们，我们还没输！”",
                 content: [
-                    { text: "三万里河东入海，", pinyin: "sān wàn lǐ hé dōng rù hǎi", notes: "【三万里河】指黄河。" },
-                    { text: "五千仞岳上摩天。", pinyin: "wǔ qiān rèn yuè shàng mó tiān", notes: "【五千仞岳】指华山。" },
-                    { text: "遗民泪尽胡尘里，", pinyin: "yí mín lèi jìn hú chén lǐ", notes: "【胡尘】金兵铁骑扬起的尘土。" },
-                    { text: "南望王师又一年。", pinyin: "nán wàng wáng shī yòu yī nián", notes: "【王师】宋朝军队。" }
+                    { text: "三万里河东入海，", pinyin: "sān wàn lǐ hé dōng rù hǎi", notes: "指黄河。" },
+                    { text: "五千仞岳上摩天。", pinyin: "wǔ qiān rèn yuè shàng mó tiān", notes: "指华山。" },
+                    { text: "遗民泪尽胡尘里，", pinyin: "yí mín lèi jìn hú chén lǐ", notes: "百姓哭泣。" },
+                    { text: "南望王师又一年。", pinyin: "nán wàng wáng shī yòu yī nián", notes: "盼望回归。" }
                 ],
-                translation: "黄河东流入海，华山直插云霄。沦陷区百姓在铁骑尘土中哭干眼泪，望穿秋水盼望军队收复失地。",
-                effect: "sand",
-                imagePrompt: "Vast Yellow River, grand Huashan mountain peaks, misty dust on the plains, ancient Chinese patriotic atmosphere."
+                translation: "黄河入海，华山摩天。遗民在敌后哭干眼泪，年年盼望南宋军队。",
+                imageUrl: "https://images.unsplash.com/photo-1518481612222-68bbe828ec1e?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "闻官军收河南河北",
-                author: "杜甫",
-                dynasty: "唐",
-                authorBio: "杜甫生平第一快诗，听闻失地收复，狂喜之下挥毫而就。",
+                title: "闻官军收河南河北", author: "杜甫", dynasty: "唐",
+                authorBio: "老杜这辈子苦哈哈，这首诗是他唯一的“高光时刻”。听说叛军投降了，他激动得手舞足蹈，连行李都不要了，直接开启“疯狂购票回家”模式。",
                 content: [
-                    { text: "剑外忽传收蓟北，", pinyin: "jiàn wài hū chuán shōu jì běi", notes: "【剑外】四川剑门关外。" },
-                    { text: "初闻涕泪满衣裳。", pinyin: "chū wén tì lèi mǎn yī shang", notes: "【涕泪】眼泪。" },
-                    { text: "白日放歌须纵酒，", pinyin: "bái rì fàng gē xū zòng jiǔ", notes: "【纵酒】开怀畅饮。" },
-                    { text: "青春作伴好还乡。", pinyin: "qīng chūn zuò bàn hǎo huán xiāng", notes: "【青春】春天的景色。" },
-                    { text: "即从巴峡穿巫峡，", pinyin: "jí cóng bā xiá chuān wū xiá", notes: "从巴峡立即穿过巫峡。" },
-                    { text: "便下襄阳向洛阳。", pinyin: "biàn xià xiāng yáng xiàng luò yáng", notes: "顺流直下襄阳洛阳。" }
+                    { text: "剑外忽传收蓟北，", pinyin: "jiàn wài hū chuán shōu jì běi", notes: "收复失地。" },
+                    { text: "初闻涕泪满衣裳。", pinyin: "chū wén tì lèi mǎn yī shang", notes: "喜极而泣。" },
+                    { text: "白日放歌须纵酒，", pinyin: "bái rì fàng gē xū zòng jiǔ", notes: "开怀畅饮。" },
+                    { text: "青春作伴好还乡。", pinyin: "qīng chūn zuò bàn hǎo huán xiāng", notes: "伴着春色还乡。" }
                 ],
-                translation: "忽传收复蓟北的消息，喜极而泣打湿衣裳。春光中放歌纵酒，即刻动身从峡谷顺流而下返回故乡。",
-                effect: "confetti",
-                imagePrompt: "Joyful Chinese scene, a boat rushing through misty Three Gorges, spring blossoms, flowing river, vibrant ink wash."
+                translation: "听闻收复，喜极而泣。春天放歌纵酒，即刻动身返回家乡。",
+                imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "凉州词",
-                author: "王之涣",
-                dynasty: "唐",
-                authorBio: "王之涣虽作品少，但首首神作。描绘边陲雄奇景观，气势宏大。",
+                title: "凉州词", author: "王之涣", dynasty: "唐",
+                authorBio: "当年大唐有三个大V（王之涣、高适、王昌龄）在酒楼看妹子唱歌比赛。谁的诗被唱最多谁就牛掰。最终，王之涣靠这首“羌笛何须怨杨柳”绝杀全场。",
                 content: [
-                    { text: "黄河远上白云间，", pinyin: "huáng hé yuǎn shàng bái yún jiān", notes: "黄河源远流长直上白云。" },
-                    { text: "一片孤城万仞山。", pinyin: "yī piàn gū chéng wàn rèn shān", notes: "【孤城】指玉门关。" },
-                    { text: "羌笛何须怨杨柳，", pinyin: "qiāng dí hé xū yuàn yáng liǔ", notes: "【杨柳】曲名《折杨柳》。" },
-                    { text: "春风不度玉门关。", pinyin: "chūn fēng bù dù yù mén guān", notes: "【度】越过。" }
+                    { text: "黄河远上白云间，", pinyin: "huáng hé yuǎn shàng bái yún jān", notes: "黄河源头。" },
+                    { text: "一片孤城万仞山。", pinyin: "yī piàn gū chéng wàn rèn shān", notes: "孤城屹立。" },
+                    { text: "羌笛何须怨杨柳，", pinyin: "qiāng dí hé xū yuàn yáng liǔ", notes: "怨：埋怨。" },
+                    { text: "春风不度玉门关。", pinyin: "chūn fēng bù dù yù mén guān", notes: "春风不来。" }
                 ],
-                translation: "黄河远接白云，高山中矗立孤城。何必用羌笛吹《折杨柳》埋怨？春风原本吹不到玉门关外。",
-                effect: "sand",
-                imagePrompt: "Grand Yellow River winding into clouds, ancient lonely fort among giant cliffs, desolation, poetic ink style."
+                translation: "黄河远接白云，孤城屹立大山。羌笛何必怨柳不绿，春风本就不吹玉门关。",
+                imageUrl: "https://images.unsplash.com/photo-1505832018823-50331d70d237?auto=format&fit=crop&q=80&w=1200"
             },
             {
-                title: "黄鹤楼送孟浩然之广陵",
-                author: "李白",
-                dynasty: "唐",
-                authorBio: "李白送别好友孟浩然，情谊寄托江水，境界开阔。",
+                title: "黄鹤楼送孟浩然之广陵", author: "李白", dynasty: "唐",
+                authorBio: "李白是孟浩然的头号迷弟。偶像要去扬州自驾游，李白在岸边依依不舍，眼神一直盯着人家的船看，直到看不见为止，活像个送机的小粉丝。",
                 content: [
-                    { text: "故人西辞黄鹤楼，", pinyin: "gù rén xī cí huáng hè lóu", notes: "【故人】指孟浩然。" },
-                    { text: "烟花三月下扬州。", pinyin: "yān huā sān yuè xià yáng zhōu", notes: "【烟花】形容繁花灿烂的春景。" },
-                    { text: "孤帆远影碧空尽，", pinyin: "gū fān yuǎn yǐng bì kōng jìn", notes: "【尽】消失。" },
-                    { text: "唯见长江天际流。", pinyin: "wéi jàn cháng jiāng tiān jì liú", notes: "【天际】天边。" }
+                    { text: "故人西辞黄鹤楼，", pinyin: "gù rén xī cí huáng hè lóu", notes: "辞别楼台。" },
+                    { text: "烟花三月下扬州。", pinyin: "yān huā sān yuè xià yáng zhōu", notes: "三月春景。" },
+                    { text: "孤帆远影碧空尽，", pinyin: "gū fān yuǎn yǐng bì kōng jìn", notes: "帆影消失。" },
+                    { text: "唯见长江天际流。", pinyin: "wéi jàn cháng jiāng tiān jì liú", notes: "唯见大江。" }
                 ],
-                translation: "老友辞别黄鹤楼，在繁花三月去扬州。孤帆远影消失在碧空尽头，只剩长江水向天边奔流。",
-                effect: "river",
-                imagePrompt: "Yellow Crane Tower by the river, misty spring flowers, a tiny boat on vast Yangtze River, blue sky."
-            },
-            {
-                title: "少年行",
-                author: "王维",
-                dynasty: "唐",
-                authorBio: "王维早年作。描写大唐少年鲜衣怒马、意气风发，是盛唐气象的缩影。",
-                content: [
-                    { text: "新丰美酒斗十千，", pinyin: "xīn fēng měi jiǔ dǒu shí qiān", notes: "形容酒价极贵。" },
-                    { text: "咸阳游侠多少年。", pinyin: "xián yáng yóu xiá duō shào nián", notes: "【咸阳】借指长安。" },
-                    { text: "相逢意气为君饮，", pinyin: "xiāng féng yì qì wèi jūn yǐn", notes: "【意气】气概性情。" },
-                    { text: "系马高楼垂柳边。", pinyin: "xì mǎ gāo lóu chuí liǔ biān", notes: "【系马】把马拴住。" }
-                ],
-                translation: "美酒万钱一斗，长安游侠少年。意气相投尽情畅饮，骏马拴在柳树边的高楼前。",
-                effect: "leaves",
-                imagePrompt: "Tang dynasty city street, noble young men on horses, wine tavern, green willow trees, golden age atmosphere."
-            },
-            {
-                title: "赠花卿",
-                author: "杜甫",
-                dynasty: "唐",
-                authorBio: "表面赞美音乐美妙，实则含蓄指出地方将领在礼制上的僭越。",
-                content: [
-                    { text: "锦城丝管日纷纷，", pinyin: "jǐn chéng sī guǎn rì fēn fēn", notes: "【锦城】成都。【丝管】弦乐管乐。" },
-                    { text: "半入江风半入云。", pinyin: "bàn rù jiāng fēng bàn rù yún", notes: "形容乐声飘扬。" },
-                    { text: "此曲只应天上有，", pinyin: "cǐ qǔ zhǐ yīng tiān shàng yǒu", notes: "【天上】暗指宫廷。" },
-                    { text: "人间能得几回闻？", pinyin: "rén jiān néng dé jǐ huí wén", notes: "人间能听几回？" }
-                ],
-                translation: "成都城里管弦声终日不绝，随江风入云霄。这样美妙的乐曲只应天宫（皇宫）有，人间能听到几回？",
-                effect: "spark",
-                imagePrompt: "Ancient banquet in Chengdu, flowing silk, musicians, clouds and river, mystical musical atmosphere."
-            },
-            {
-                title: "江上",
-                author: "王安石",
-                dynasty: "宋",
-                authorBio: "王安石晚年隐居南京钟山。诗句清新，透出平和心境。",
-                content: [
-                    { text: "江北秋阴一半开，", pinyin: "jiāng běi qiū yīn yī bàn kāi", notes: "【开】消散。" },
-                    { text: "晚云含雨却低徊。", pinyin: "wǎn yún hán yǔ què dī huí", notes: "【低徊】在低空徘徊。" },
-                    { text: "青山缭绕疑无路，", pinyin: "qīng shān liáo rào yí wú lù", notes: "【缭绕】环绕。" },
-                    { text: "忽见千帆隐映来。", pinyin: "hū jàn qiān fān yǐn yìng lái", notes: "【隐映】若隐若现。" }
-                ],
-                translation: "秋云消散一半，傍晚含雨的云徘徊。青山重叠仿佛无路，忽然看见千帆若隐若现而来。",
-                effect: "rain",
-                imagePrompt: "River landscape with misty mountains, autumn clouds, sudden appearance of white sails, serene ink wash."
-            },
-            {
-                title: "沈园（其一）",
-                author: "陆游",
-                dynasty: "宋",
-                authorBio: "陆游75岁重游沈园怀念唐婉，写下了一生中最凄美的作品。",
-                content: [
-                    { text: "城上斜阳画角哀，", pinyin: "chéng shàng xié yáng huà jiǎo āi", notes: "【画角】军中管乐器。" },
-                    { text: "沈园非复旧池台。", pinyin: "shěn yuán fēi fù jiù chí tái", notes: "【非复】不再是。" },
-                    { text: "伤心桥下春波绿，", pinyin: "shāng xīn qiáo xià chūn bō lǜ", notes: "令人伤心的桥下绿水。" },
-                    { text: "曾是惊鸿照影来。", pinyin: "céng shì jīng hóng zhào yǐng lái", notes: "【惊鸿】喻佳人唐婉。" }
-                ],
-                translation: "斜阳下角声凄凉，沈园已非旧景。桥下春水依旧碧绿，曾经映照过她惊鸿般的身影。",
-                effect: "leaves",
-                imagePrompt: "Melancholic Chinese garden, sunset over ancient pond, stone bridge, soft green water, shadow of a woman."
-            },
-            {
-                title: "冬夜读书示子聿",
-                author: "陆游",
-                dynasty: "宋",
-                authorBio: "陆游教诲儿子：做学问要勤奋，更要亲身实践。",
-                content: [
-                    { text: "古人学问无遗力，", pinyin: "gǔ rén xué wèn wú yí lì", notes: "【无遗力】不遗余力。" },
-                    { text: "少壮工夫老始成。", pinyin: "shào zhuàng gōng fu lǎo shǐ chéng", notes: "少年努力，老来成才。" },
-                    { text: "纸上得来终觉浅，", pinyin: "zhǐ shàng dé lái zhōng jué qiǎn", notes: "书本知识毕竟浅薄。" },
-                    { text: "绝知此事要躬行。", pinyin: "jué zhī cǐ shì yào gōng xíng", notes: "【躬行】亲身实践。" }
-                ],
-                translation: "古人做学问尽心尽力，少时苦功老来方成。从书本得来终究浅薄，要透彻理解必须亲身实践。",
-                effect: "snow",
-                imagePrompt: "Ancient scholar reading by candlelight on a snowy night, scrolls, traditional ink room, focus and wisdom."
-            },
-            {
-                title: "长相思",
-                author: "白居易",
-                dynasty: "唐",
-                authorBio: "以女子口吻，写出对远方情人的深厚思念。",
-                content: [
-                    { text: "汴水流，泗水流，", pinyin: "biàn shuǐ liú, sì shuǐ liú", notes: "河流名。" },
-                    { text: "流到瓜洲古渡头。", pinyin: "liú dào guā zhōu gǔ dù tóu", notes: "【瓜洲】扬州渡口。" },
-                    { text: "吴山点点愁。", pinyin: "wú shān diǎn diǎn chóu", notes: "江南山峦似带愁思。" },
-                    { text: "思悠悠，恨悠悠，", pinyin: "sī yōu yōu, hèn yōu yōu", notes: "【悠悠】思绪绵长。" },
-                    { text: "恨到归时方始休。", pinyin: "hèn dào guī shí fāng shǐ xiū", notes: "【休】停止。" },
-                    { text: "月明人倚楼。", pinyin: "yuè míng rén yǐ lóu", notes: "明月下独倚高楼。" }
-                ],
-                translation: "河水流向古渡口，远山点点含愁。思念和离恨绵长无尽，直到你归来。明月下我正独倚高楼。",
-                effect: "mist",
-                imagePrompt: "Moonlit river scene, ancient ferry, lady standing on a pavilion tower, flowing water, lonely blue mood."
-            },
-            {
-                title: "寄扬州韩绰判官",
-                author: "杜牧",
-                dynasty: "唐",
-                authorBio: "杜牧离任后怀念扬州。通过询问友人，寄托对扬州的深切怀念。",
-                content: [
-                    { text: "青山隐隐水迢迢，", pinyin: "qīng shān yǐn yǐn shuǐ tiáo tiáo", notes: "【迢迢】路途遥远。" },
-                    { text: "秋尽江南草未凋。", pinyin: "qiū jìn jiāng nán cǎo wèi diāo", notes: "【凋】枯萎。" },
-                    { text: "二十四桥明月夜，", pinyin: "èr shí sì qiáo míng yuè yè", notes: "扬州著名风景点。" },
-                    { text: "玉人何处教吹箫？", pinyin: "yù rén hé chù jiāo chuī xiāo", notes: "【玉人】指韩绰。" }
-                ],
-                translation: "山色隐约水路遥，深秋江南草未黄。二十四桥明月夜，老友你在何处教人吹箫？",
-                effect: "mist",
-                imagePrompt: "Twenty-four bridge in Yangzhou, moonlight reflection, misty autumn landscape, ancient flute player style."
-            },
-            {
-                title: "乡村四月",
-                author: "翁卷",
-                dynasty: "宋",
-                authorBio: "翁卷一生隐居，擅长描写清新的田园风光。",
-                content: [
-                    { text: "绿遍山原白满川，", pinyin: "lǜ biàn shān yuán bái mǎn chuān", notes: "【白满川】稻田的水光。" },
-                    { text: "子规声里雨如烟。", pinyin: "zǐ guī shēng lǐ yǔ rú yān", notes: "【子规】杜鹃鸟。" },
-                    { text: "乡村四月闲人少，", pinyin: "xiāng cūn sì yuè xián rén shǎo", notes: "农事繁忙。" },
-                    { text: "才了蚕桑又插田。", pinyin: "cái liǎo cán sāng yòu chā tián", notes: "忙完蚕桑忙插秧。" }
-                ],
-                translation: "山原翠绿水满川，杜鹃啼中雨如烟。四月乡村人最忙，才采完蚕桑又要去插田。",
-                effect: "rain",
-                imagePrompt: "Green paddy fields, misty rain like smoke, farmers planting rice, peaceful Song dynasty rural style."
-            },
-            {
-                title: "西江月·题溧阳三塔寺",
-                author: "张孝祥",
-                dynasty: "宋",
-                authorBio: "豪放派词人。虽然才华横溢但一生坎坷，词风透出淡泊从容。",
-                content: [
-                    { text: "问讯湖边春色，", pinyin: "wèn xùn hú biān chūn sè", notes: "打听湖边春景。" },
-                    { text: "重来又是三年。", pinyin: "zhòng lái yòu shì sān nián", notes: "感叹重游。" },
-                    { text: "东风吹我过湖船，", pinyin: "dōng fēng chuī wǒ guò hú chuán", notes: "春风吹船行。" },
-                    { text: "杨柳丝丝拂面。", pinyin: "yáng liǔ sī sī fú miàn", notes: "柳条拂过脸庞。" },
-                    { text: "世路如今已惯，", pinyin: "shì lù rú jīn yǐ guàn", notes: "【世路】世间人情。" },
-                    { text: "此心到处悠然。", pinyin: "cǐ心到处悠然。", notes: "【悠然】闲适自在。" },
-                    { text: "寒光亭下水如天，", pinyin: "hán guāng tíng xià shuǐ rú天", notes: "水天一色。" },
-                    { text: "飞起沙鸥一片。", pinyin: "fēi qǐ shā ōu yī piàn", notes: "沙鸥惊起。" }
-                ],
-                translation: "三年来再游湖边。春风吹我过湖，杨柳拂面。早已习惯世事，心境到处悠然。水天一色中，沙鸥惊起。",
-                effect: "river",
-                imagePrompt: "A boat on a mirror-like lake, willow branches, flying white gulls, ancient pavilion, tranquil scenery."
-            },
-            {
-                title: "虞美人·听雨",
-                author: "蒋捷",
-                dynasty: "宋",
-                authorBio: "蒋捷历经国亡之痛。这首词回顾一生不同阶段听雨的心境。",
-                content: [
-                    { text: "少年听雨歌楼上，", pinyin: "shào nián tīng yǔ gē lóu shàng", notes: "年少豪奢生活。" },
-                    { text: "红烛昏罗帐。", pinyin: "hóng zhú hūn luó zhàng", notes: "红烛映罗帐。" },
-                    { text: "壮年听雨客舟中，", pinyin: "zhuàng nián tīng yǔ kè zhōu zhōng", notes: "【客舟】漂泊之船。" },
-                    { text: "江阔云低、断雁叫西风。", pinyin: "jiāng kuò yún dī, duàn yàn jiào xī fēng", notes: "【断雁】孤雁。" },
-                    { text: "而今听雨僧庐下，", pinyin: "ér jīn tīng yǔ sēng lú xià", notes: "【僧庐】寺庙。" },
-                    { text: "鬓已星星也。", pinyin: "bìn yǐ xīng xīng yě", notes: "【星星】两鬓斑白。" },
-                    { text: "悲欢离合总无情，", pinyin: "bēi huān lí hé zǒng wú qíng", notes: "人生感悟。" },
-                    { text: "一任阶前、点滴到天明。", pinyin: "yī rèn jiē qián, diǎn dī dào天明", notes: "【一任】听凭。" }
-                ],
-                translation: "少年歌楼听雨红烛昏暗；壮年客船听雨江阔孤雁。如今鬓白僧庐听雨，悲欢总无情，且听雨滴到天明。",
-                effect: "rain",
-                imagePrompt: "Three scenes in one painting: candlelit room, a lonely boat in rain, an old man in a temple, rain drops."
+                translation: "老友辞别黄鹤楼去扬州。孤帆远去消失在碧空，唯见长江水向天流。",
+                imageUrl: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?auto=format&fit=crop&q=80&w=1200"
             }
         ];
 
@@ -359,77 +163,22 @@
             const [showTranslation, setShowTranslation] = useState(false);
             const [activeNote, setActiveNote] = useState(null);
             const [completed, setCompleted] = useState({});
-            const [poemImages, setPoemImages] = useState({}); 
-            const [isGenerating, setIsGenerating] = useState(false);
-
-            const currentPoem = POEMS_DATA[currentIndex];
-            const apiKey = ""; 
-
-            const generateImage = useCallback(async (index) => {
-                if (poemImages[index] || isGenerating) return;
-                
-                setIsGenerating(true);
-                const prompt = `Style: Traditional Chinese ink wash masterpiece. ${POEMS_DATA[index].imagePrompt}. Soft watercolor, elegant composition, minimalist, high quality.`;
-
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            instances: [{ prompt }],
-                            parameters: { sampleCount: 1 }
-                        })
-                    });
-                    const result = await response.json();
-                    if (result.predictions && result.predictions[0]) {
-                        const url = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
-                        setPoemImages(prev => ({ ...prev, [index]: url }));
-                    }
-                } catch (error) {
-                    console.error("Image generation failed", error);
-                } finally {
-                    setIsGenerating(false);
-                }
-            }, [poemImages, isGenerating]);
 
             useEffect(() => {
-                if (!poemImages[currentIndex]) {
-                    generateImage(currentIndex);
-                }
                 if (window.lucide) window.lucide.createIcons();
-            }, [currentIndex, generateImage]);
+            }, [currentIndex]);
 
-            const RenderEffect = ({ type }) => (
-                <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
-                    {Array.from({ length: 15 }).map((_, i) => (
-                        <div key={i} className="element" style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `-${Math.random() * 20}%`,
-                            animationDelay: `${Math.random() * 5}s`,
-                            animationDuration: `${8 + Math.random() * 5}s`,
-                            opacity: 0.3
-                        }}>
-                            {type === 'leaves' && <div className="w-5 h-2 bg-emerald-600 rounded-full rotate-45" />}
-                            {type === 'snow' && <div className="w-2 h-2 bg-white rounded-full blur-[1px]" />}
-                            {type === 'sand' && <div className="w-4 h-1 bg-amber-600/30 rounded-full" />}
-                            {type === 'spark' && <div className="w-1 h-6 bg-yellow-400 animate-pulse" />}
-                            {type === 'rain' && <div className="w-[1px] h-6 bg-sky-200 opacity-40" />}
-                            {type === 'mist' && <div className="w-20 h-10 bg-white/5 blur-xl rounded-full" />}
-                            {type === 'river' && <div className="w-10 h-[1px] bg-sky-400/20" />}
-                        </div>
-                    ))}
-                </div>
-            );
+            const currentPoem = POEMS_DATA[currentIndex];
 
             return (
                 <div className="min-h-screen flex flex-col items-center justify-center p-4">
                     <div className="w-full max-w-6xl mb-6 flex justify-between items-center px-4">
                         <div className="flex items-center gap-4">
                             <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
-                                <i data-lucide="palette" class="w-5 h-5 text-white"></i>
+                                <i data-lucide="scroll-text" className="w-5 h-5 text-white"></i>
                             </div>
                             <div>
-                                <h2 className="text-sm font-black tracking-widest text-white italic uppercase">古诗词那些事儿 · 20首AI意境全集</h2>
+                                <h2 className="text-sm font-black tracking-widest text-white italic uppercase">大唐那些事儿 · 趣解手册</h2>
                                 <div className="flex gap-1 mt-1">
                                     {POEMS_DATA.map((_, i) => (
                                         <div key={i} className={`h-1 transition-all rounded-full ${completed[i] ? 'bg-emerald-400' : i === currentIndex ? 'bg-indigo-500 w-4' : 'bg-white/10 w-2'}`} />
@@ -440,21 +189,15 @@
                     </div>
 
                     <div className="w-full max-w-6xl lg:h-[80vh] bg-slate-900 rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col lg:flex-row relative">
-                        <div className="w-full lg:w-1/2 h-[350px] lg:h-full relative overflow-hidden bg-slate-950 border-r border-white/5">
-                            {poemImages[currentIndex] ? (
-                                <img 
-                                    src={poemImages[currentIndex]} 
-                                    className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105 transition-opacity duration-1000"
-                                />
-                            ) : (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 shimmer">
-                                    <div className="w-12 h-12 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
-                                    <span className="text-[10px] text-indigo-300 font-black tracking-widest uppercase">AI正在绘制意境...</span>
-                                </div>
-                            )}
-
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/30 z-10" />
-                            <RenderEffect type={currentPoem.effect} />
+                        <div className="w-full lg:w-1/2 h-[350px] lg:h-full relative overflow-hidden bg-slate-950 poem-image-container">
+                            <img 
+                                key={currentPoem.imageUrl}
+                                src={currentPoem.imageUrl} 
+                                className="absolute inset-0 w-full h-full object-cover opacity-50 scale-100 img-fade"
+                                alt="Poem View"
+                            />
+                            
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/20 z-10" />
                             
                             <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-40 p-8 text-center">
                                 <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tighter drop-shadow-2xl">{currentPoem.title}</h1>
@@ -464,18 +207,18 @@
 
                         <div className="w-full lg:w-1/2 p-8 lg:p-14 flex flex-col bg-slate-950 overflow-y-auto custom-scroll">
                             <div className="flex-grow flex flex-col justify-center space-y-8">
-                                <div className="relative p-6 bg-indigo-500/5 rounded-3xl border border-indigo-500/20">
-                                    <div className="flex items-center gap-2 mb-3 text-indigo-400">
-                                        <i data-lucide="info" class="w-4 h-4"></i>
-                                        <span className="text-[10px] font-black tracking-widest uppercase">诗人背景</span>
+                                <div className="relative p-6 bg-amber-500/5 rounded-3xl border border-amber-500/20">
+                                    <div className="flex items-center gap-2 mb-3 text-amber-400">
+                                        <i data-lucide="zap" className="w-4 h-4"></i>
+                                        <span className="text-[10px] font-black tracking-widest uppercase">诗人那些事儿</span>
                                     </div>
-                                    <p className="text-slate-400 text-sm leading-relaxed italic relative z-10">{currentPoem.authorBio}</p>
+                                    <p className="text-slate-400 text-sm leading-relaxed italic">{currentPoem.authorBio}</p>
                                 </div>
 
                                 <div className="space-y-8 py-4">
                                     {currentPoem.content.map((line, idx) => (
                                         <div key={idx} className="group relative">
-                                            <p className="pinyin font-mono">{line.pinyin}</p>
+                                            <p className="pinyin font-mono opacity-40 text-xs mb-1">{line.pinyin}</p>
                                             <p className={`text-3xl md:text-5xl font-serif cursor-help transition-all ${activeNote === line.notes ? 'text-indigo-400' : 'text-slate-200 hover:text-indigo-300'}`} 
                                                onClick={() => setActiveNote(activeNote === line.notes ? null : line.notes)}>
                                                 {line.text}
@@ -491,14 +234,17 @@
                                 
                                 <div className="flex gap-4 pt-6">
                                     <button onClick={() => setShowTranslation(!showTranslation)} className={`flex-1 py-5 rounded-2xl border transition-all flex justify-center items-center gap-3 font-bold ${showTranslation ? 'bg-indigo-600 border-indigo-400 shadow-lg shadow-indigo-500/30' : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'}`}>
-                                        <i data-lucide="book" class="w-5 h-5"></i>
-                                        <span>白话译文</span>
+                                        <i data-lucide="languages" className="w-5 h-5"></i>
+                                        <span>大白话解释</span>
                                     </button>
                                     <button onClick={() => setCompleted(p => ({...p, [currentIndex]: !p[currentIndex]}))} className={`w-20 py-5 rounded-2xl border transition-all flex justify-center items-center ${completed[currentIndex] ? 'bg-emerald-600 border-emerald-400 text-white' : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'}`}>
-                                        <i data-lucide={completed[currentIndex] ? "check-circle-2" : "circle"} class="w-6 h-6"></i>
+                                        <i data-lucide={completed[currentIndex] ? "party-popper" : "circle"} className="w-6 h-6"></i>
                                     </button>
                                 </div>
-                                {showTranslation && <div className="p-6 bg-slate-900 rounded-3xl border border-white/5 text-slate-300 text-base leading-relaxed animate-in fade-in slide-in-from-bottom-2">{currentPoem.translation}</div>}
+                                {showTranslation && <div className="p-6 bg-slate-900 rounded-3xl border border-white/5 text-slate-300 text-base leading-relaxed animate-in fade-in slide-in-from-bottom-2">
+                                    <span className="text-indigo-400 font-bold block mb-2">翻译一下：</span>
+                                    {currentPoem.translation}
+                                </div>}
                             </div>
                         </div>
                     </div>
