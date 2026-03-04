@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第12课：日本跨年全体验 (No-Image Fail Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #87CEEB; /* 南方公园天空蓝 */
+            overflow-x: hidden;
+        }
+        .sp-border {
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+        }
+        .cartoon-font {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+        }
+        .module-card {
+            display: none;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .module-card.active {
+            display: block;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .btn-sp {
+            background-color: #ffde00;
+            border: 3px solid black;
+            font-weight: bold;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .btn-sp:hover {
+            transform: translateY(-4px);
+            background-color: #ffea00;
+        }
+        .btn-sp:active { transform: translateY(0); }
+        
+        .led-blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* SVG绘制风格 */
+        .svg-container {
+            background: #fff;
+            border: 4px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="max-w-6xl mx-auto mb-8 text-center">
+        <h1 class="text-5xl md:text-7xl cartoon-font text-white stroke-black drop-shadow-[0_6px_0_rgba(0,0,0,1)] uppercase">
+            大晦日 & 元日: THE ULTIMATE EXPERIENCE
+        </h1>
+        <div class="mt-4 flex justify-center items-center gap-4">
+            <span class="font-bold text-black bg-white px-4 py-1 sp-border rotate-[-2deg]">第12课互动平台</span>
+            <span class="font-bold text-white bg-red-600 px-4 py-1 sp-border rotate-[2deg] led-blink underline">不许睡觉！LISTEN!</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto flex flex-col md:flex-row gap-6">
+        
+        <nav class="w-full md:w-1/4 flex flex-col gap-3">
+            <button onclick="showModule(1)" class="btn-sp p-4 text-left flex items-center gap-2">
+                <span>🏮</span> 模块 1: 除夕脑暴
+            </button>
+            <button onclick="showModule(2)" class="btn-sp p-4 text-left flex items-center gap-2">
+                <span>🔔</span> 模块 2: 声音记忆
+            </button>
+            <button onclick="showModule(3)" class="btn-sp p-4 text-left flex items-center gap-2">
+                <span>🗣️</span> 模块 3: 人生建议官
+            </button>
+            <button onclick="showModule(4)" class="btn-sp p-4 text-left flex items-center gap-2">
+                <span>🆚</span> 模块 4: 中日大比拼
+            </button>
+            <button onclick="showModule(5)" class="btn-sp p-4 text-left flex items-center gap-2">
+                <span>🎍</span> 模块 5: 模拟初诣
+            </button>
+            
+            <div class="mt-8 p-4 bg-orange-400 sp-border text-center">
+                <p class="font-bold mb-2 uppercase">🔊 音效控制台</p>
+                <button onclick="playBell(100, 3)" class="w-full bg-black text-white py-2 text-xs font-bold rounded mb-2 hover:bg-gray-800">除夜之钟</button>
+                <button onclick="playShrineBell()" class="w-full bg-black text-white py-2 text-xs font-bold rounded hover:bg-gray-800">神社摇铃</button>
+            </div>
+        </nav>
+
+        <section class="w-full md:w-3/4 bg-white sp-border p-6 min-h-[600px] relative">
+            
+            <!-- Module 1 -->
+            <div id="module1" class="module-card active">
+                <h2 class="text-3xl font-black text-red-600 mb-6 italic underline">模块 1: 除夕脑暴 (10min)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="bg-yellow-200 p-4 sp-border mb-4">
+                            <p class="font-bold uppercase">🔥 任务：快闪识图</p>
+                            <p class="text-sm">看右边的食物，它代表了什么文化意义？</p>
+                        </div>
+                        <ul class="space-y-4 font-bold text-lg">
+                            <li class="flex items-center gap-2"><span class="text-red-600">●</span> 大晦日 (おおみそか)</li>
+                            <li class="flex items-center gap-2"><span class="text-red-600">●</span> 年越しそば (荞麦面)</li>
+                        </ul>
+                    </div>
+                    <div class="svg-container h-64 bg-blue-50">
+                        <!-- SVG荞麦面 -->
+                        <svg width="200" height="200" viewBox="0 0 200 200">
+                            <path d="M40 100 Q100 180 160 100" fill="#fde68a" stroke="black" stroke-width="4"/>
+                            <ellipse cx="100" cy="100" rx="70" ry="30" fill="#fef3c7" stroke="black" stroke-width="4"/>
+                            <path d="M50 100 C50 60, 150 60, 150 100" fill="none" stroke="#d97706" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M60 95 C60 70, 140 70, 140 95" fill="none" stroke="#d97706" stroke-width="6" stroke-linecap="round"/>
+                            <rect x="70" y="40" width="8" height="80" fill="#78350f" stroke="black" stroke-width="2" transform="rotate(-20 70 40)"/>
+                            <rect x="85" y="35" width="8" height="80" fill="#78350f" stroke="black" stroke-width="2" transform="rotate(-20 85 35)"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div id="module3" class="module-card">
+                <h2 class="text-3xl font-black text-green-600 mb-6 uppercase">模块 3: 人生建议官 (~ばいい)</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="sp-border p-4 bg-red-50">
+                        <p class="font-bold text-xs uppercase mb-2">情境：手机粉碎 (スマホ)</p>
+                        <div class="svg-container h-32 mb-2 bg-gray-200">
+                            <!-- SVG碎屏手机 -->
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <rect x="30" y="10" width="40" height="80" rx="5" fill="#333" stroke="black" stroke-width="2"/>
+                                <rect x="33" y="15" width="34" height="70" fill="#888" />
+                                <path d="M33 15 L67 85 M33 40 L67 30 M40 15 L60 85" stroke="white" stroke-width="1" opacity="0.8"/>
+                                <path d="M50 50 L33 60 M50 50 L67 45" stroke="white" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <p class="text-[10px] font-bold italic">“粉々になって、直しようがない...”</p>
+                        <div class="mt-2 bg-white p-2 border-2 border-black font-bold text-red-600 text-xs text-center italic">
+                            学生建议：新しいのを買えばいい。
+                        </div>
+                    </div>
+                    <div class="p-4 bg-yellow-400 border-4 border-black flex flex-col justify-center">
+                        <p class="font-bold text-center underline italic">规则解释官</p>
+                        <p class="text-xs text-center mt-2 italic">“在日本，元旦全家要喝特殊的酒(お屠蘇)。”</p>
+                        <p class="font-black text-center mt-2 uppercase">飲むことになっている。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 2 & 5 (略，保持原有逻辑但确保图片不报错) -->
+            <div id="module2" class="module-card">
+                <h2 class="text-3xl font-black text-blue-600 mb-6 uppercase italic">模块 2: 声音抢答 (除夜の鐘)</h2>
+                <div class="p-10 bg-gray-900 text-white sp-border flex flex-col items-center">
+                    <button onclick="playBellSeries()" class="bg-red-600 hover:bg-red-500 text-white px-10 py-5 rounded-full font-black text-2xl border-4 border-white animate-pulse active:scale-95">
+                        LISTEN: 除夜の鐘
+                    </button>
+                    <p class="mt-6 font-bold text-yellow-400">🔊 抢答词汇：除夜の鐘 / お年玉 / 紅白</p>
+                </div>
+            </div>
+
+            <div id="module5" class="module-card">
+                <h2 class="text-3xl font-black text-pink-600 mb-6 uppercase italic">模块 5: 模拟初诣 (初詣)</h2>
+                <div class="svg-container w-full h-48 bg-orange-100 mb-4">
+                    <!-- SVG鸟居 -->
+                    <svg width="200" height="150" viewBox="0 0 200 150">
+                        <rect x="40" y="20" width="120" height="15" fill="#dc2626" stroke="black" stroke-width="3"/>
+                        <rect x="30" y="5" width="140" height="15" fill="#dc2626" stroke="black" stroke-width="3"/>
+                        <rect x="55" y="20" width="15" height="110" fill="#dc2626" stroke="black" stroke-width="3"/>
+                        <rect x="130" y="20" width="15" height="110" fill="#dc2626" stroke="black" stroke-width="3"/>
+                        <rect x="55" y="45" width="90" height="10" fill="#dc2626" stroke="black" stroke-width="3"/>
+                    </svg>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="playShrineBell()" class="btn-sp px-8 py-3 italic">🔔 摇铃祈祷 (哐啷!)</button>
+                </div>
+                <p class="mt-4 p-4 bg-blue-50 border-2 border-black text-center font-bold">
+                    “そのまま参拝します” -> <span class="text-blue-600 underline">~まま</span>
+                </p>
+            </div>
+
+            <!-- Module 4 -->
+            <div id="module4" class="module-card">
+                <h2 class="text-3xl font-black text-orange-600 mb-6 uppercase">模块 4: 中日跨年大对比</h2>
+                <div class="grid grid-cols-2 gap-0 border-4 border-black text-sm">
+                    <div class="bg-red-600 text-white p-3 border-r-4 border-black font-bold text-center italic">🇨🇳 中国</div>
+                    <div class="bg-white p-3 font-bold text-center italic">🇯🇵 日本</div>
+                    <div class="p-2 border-t-4 border-black bg-gray-50">饺子 / 爆竹</div>
+                    <div class="p-2 border-t-4 border-l-4 border-black">荞麦面 / 钟声</div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- 底部状态栏 -->
+    <footer class="max-w-6xl mx-auto mt-8 flex justify-between items-center bg-white p-4 sp-border">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-red-600 flex items-center justify-center border-4 border-black text-white font-black">SP</div>
+            <div>
+                <p class="text-xs font-black uppercase">Lesson 12: THE JAPANESE NEW YEAR</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-xs font-black mb-1">PROGRESS: <span id="progress-text">20%</span></p>
+            <div class="w-48 h-6 bg-gray-200 border-4 border-black">
+                <div id="progress-bar" class="h-full bg-green-500 w-1/5 transition-all"></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBell(frequency = 120, duration = 2.5) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function playBellSeries() {
+            [0, 1.5, 3].forEach(t => setTimeout(() => playBell(100, 3), t * 1000));
+        }
+
+        function playShrineBell() {
+            for(let i=0; i<3; i++) setTimeout(() => {
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.frequency.setValueAtTime(2500, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                o.connect(g); g.connect(audioCtx.destination);
+                o.start(); o.stop(audioCtx.currentTime + 0.1);
+            }, i * 150);
+            setTimeout(() => playBell(300, 1), 500);
+        }
+
+        function showModule(n) {
+            document.querySelectorAll('.module-card').forEach(m => m.classList.remove('active'));
+            document.getElementById('module' + n).classList.add('active');
+            const progress = (n / 5) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').innerText = progress + '%';
+        }
+    </script>
+</body>
+</html>
