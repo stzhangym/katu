@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第12课 语法要点实战</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #87CEEB;
+            color: #333;
+        }
+        .sp-card {
+            border: 4px solid black;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            background: white;
+            transition: transform 0.2s;
+        }
+        .sp-btn {
+            border: 3px solid black;
+            font-weight: bold;
+            transition: all 0.1s;
+        }
+        .sp-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+        .cartoon-header {
+            font-family: 'Bangers', cursive;
+            text-shadow: 3px 3px 0px #000;
+        }
+        .grammar-section { display: none; }
+        .grammar-section.active { display: block; }
+        
+        .answer-box {
+            display: none;
+            background: #fef3c7;
+            border-left: 8px solid #f59e0b;
+        }
+        .answer-box.show { display: block; animation: bounceIn 0.5s ease; }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="max-w-5xl mx-auto text-center mb-10">
+        <h1 class="text-6xl cartoon-header text-white mb-2">GRAMMAR BATTLE: LESSON 12</h1>
+        <p class="bg-black text-yellow-400 inline-block px-4 py-1 font-bold rotate-2">掌握这四个语法，你就是日语大神！</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+        <!-- 左侧菜单 -->
+        <aside class="w-full md:w-1/3 flex flex-col gap-4">
+            <button onclick="switchGrammar('mama')" class="sp-btn bg-red-500 text-white p-4 text-left text-xl">1. ~まま (保持原样)</button>
+            <button onclick="switchGrammar('koto')" class="sp-btn bg-blue-500 text-white p-4 text-left text-xl">2. ~ことになっている (规定)</button>
+            <button onclick="switchGrammar('yogani')" class="sp-btn bg-green-500 text-white p-4 text-left text-xl">3. ~ようがない (没办法)</button>
+            <button onclick="switchGrammar('baii')" class="sp-btn bg-yellow-400 text-black p-4 text-left text-xl">4. ~ばいい (建议/祝愿)</button>
+            
+            <div class="mt-6 p-4 bg-white sp-border border-4 border-black italic text-sm">
+                <p class="font-bold underline">💡 教师操作说明：</p>
+                <ol class="list-decimal ml-4 mt-2 space-y-1">
+                    <li>点击语法切换练习。</li>
+                    <li>展示【情景】，让学生思考口头作答。</li>
+                    <li>点击【显示答案】进行确认。</li>
+                </ol>
+            </div>
+        </aside>
+
+        <!-- 右侧演练区 -->
+        <section class="w-full md:w-2/3">
+            <div id="display-area" class="sp-card p-6 min-h-[600px]">
+                
+                <!-- 语法1: ~まま -->
+                <div id="mama" class="grammar-section active">
+                    <h2 class="text-3xl font-black mb-6 text-red-600 border-b-4 border-red-600 pb-2">练习 1：~まま</h2>
+                    <div class="space-y-8" id="mama-content"></div>
+                </div>
+
+                <!-- 语法2: ~ことになっている -->
+                <div id="koto" class="grammar-section">
+                    <h2 class="text-3xl font-black mb-6 text-blue-600 border-b-4 border-blue-600 pb-2">练习 2：~ことになっている</h2>
+                    <div class="space-y-8" id="koto-content"></div>
+                </div>
+
+                <!-- 语法3: ~ようがない -->
+                <div id="yogani" class="grammar-section">
+                    <h2 class="text-3xl font-black mb-6 text-green-600 border-b-4 border-green-600 pb-2">练习 3：~ようがない</h2>
+                    <div class="space-y-8" id="yogani-content"></div>
+                </div>
+
+                <!-- 语法4: ~ばいい -->
+                <div id="baii" class="grammar-section">
+                    <h2 class="text-3xl font-black mb-6 text-yellow-600 border-b-4 border-yellow-600 pb-2">练习 4：~ばいい</h2>
+                    <div class="space-y-8" id="baii-content"></div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const data = {
+            mama: [
+                { q: "太累了，没脱衣服就睡了。", s: "疲れた / 服を着る / 寝る", a: "疲れていたので、服を着たまま寝てしまった。" },
+                { q: "生吃蔬菜更好吃。", s: "野菜 / 生 / 食べる / 方がいい", a: "野菜は生のまま食べるほうがいい。" },
+                { q: "开着灯睡觉对眼睛不好。", s: "電気 / つける / 寝る / 良くない", a: "電気をつけたまま寝るのは、目によくない。" },
+                { q: "请就这样坐着听课。", s: "座る / 授業を聞く / ください", a: "どうぞ、座ったまま授業を聞いてください。" },
+                { q: "穿着大衣就进房间了。", s: "コート / 着る / 部屋に入る", a: "コートを着たまま部屋に入りました。" }
+            ],
+            koto: [
+                { q: "日本的过年，全家要喝酒。", s: "正月 / 家族でお酒を飲む", a: "日本では、お正月には家族でお酒を飲むことになっています。" },
+                { q: "学校规定晚上10点熄灯。", s: "学校 / 夜10時に消灯する", a: "学校では、夜10時に消灯することになっています。" },
+                { q: "后天要参加朋友的婚礼。", s: "明後日 / 友達の結婚式に行く", a: "明後日、友達の結婚式に行くことになっています。" },
+                { q: "这里禁止吸烟（规定）。", s: "ここ / タバコを吸わない", a: "ここでは、タバコを吸わないことになっています。" },
+                { q: "每周二要交作业。", s: "火曜日 / 宿題を出す", a: "毎週火曜日に、宿題を出すことになっています。" }
+            ],
+            yogani: [
+                { q: "压岁钱拿了太多，开心得不得了。", s: "うれしい気持ち / 抑える", a: "うれしい気持ちを抑えようがありません。" },
+                { q: "手机掉地上摔碎了，没法修。", s: "スマホ / 粉々 / 直す", a: "スマホが粉々になって、直しようがありません。" },
+                { q: "他也没留个联系方式，没法联系。", s: "連絡先 / 教えてくれない / 連絡する", a: "連絡先を教えてくれないので、連絡しようがありません。" },
+                { q: "这道菜名字太长，没法记。", s: "料理の名前 / 長すぎる / 覚える", a: "料理の名前が長すぎて、覚えようがありません。" },
+                { q: "没有纸笔，没法写字。", s: "ペンも紙もない / 書く", a: "ペンも紙もないので、書きようがありません。" }
+            ],
+            baii: [
+                { q: "（祈祷）希望明年是个好年。", s: "来年 / いい年になる", a: "来年が、いい年になればいいと祈ります。" },
+                { q: "不知道路的话，问警察就行了。", s: "道が分からない / 交番で聞く", a: "道が分からなければ、交番で聞けばいい。" },
+                { q: "睡不着的话，喝点热牛奶就好了。", s: "眠れない / ホットミルクを飲む", a: "眠れなければ、ホットミルクを飲めばいい。" },
+                { q: "希望早点病愈。", s: "病気 / 早く治る", a: "病気が早く治ればいいですね。" },
+                { q: "作业太多写不完？明天再写就行了。", s: "終わらない？ / 明日やる", a: "終わらないなら、明日やればいいじゃないか。" }
+            ]
+        };
+
+        function renderGrammar(key) {
+            const container = document.getElementById(`${key}-content`);
+            container.innerHTML = data[key].map((item, index) => `
+                <div class="p-4 bg-gray-50 border-2 border-black rounded shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-black text-white px-2 py-1 text-xs">SCENE ${index + 1}</span>
+                        <p class="font-bold text-gray-700">情景：${item.q}</p>
+                    </div>
+                    <p class="text-sm italic text-blue-600 mb-3">提示词：${item.s}</p>
+                    <button onclick="toggleAnswer(this)" class="sp-btn bg-white px-4 py-1 text-sm hover:bg-gray-100">显示答案</button>
+                    <div class="answer-box mt-3 p-3 font-bold text-lg text-black">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleAnswer(btn) {
+            const box = btn.nextElementSibling;
+            const isShowing = box.classList.toggle('show');
+            btn.innerText = isShowing ? "隐藏答案" : "显示答案";
+            btn.style.backgroundColor = isShowing ? "#eee" : "#fff";
+            
+            // 播放一个简单的确认音效
+            playPop();
+        }
+
+        function switchGrammar(id) {
+            document.querySelectorAll('.grammar-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 初始化渲染
+        ['mama', 'koto', 'yogani', 'baii'].forEach(renderGrammar);
+
+        // 简易音效
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playPop() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.frequency.setValueAtTime(600, audioCtx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + 0.1);
+        }
+    </script>
+</body>
+</html>
